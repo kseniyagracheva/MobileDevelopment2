@@ -2,10 +2,14 @@ plugins {
     alias(libs.plugins.android.application)
 }
 
+
 android {
     namespace = "ru.mirea.gracheva.movieproject"
     compileSdk = 36
 
+    buildFeatures {
+        viewBinding = true
+    }
     defaultConfig {
         applicationId = "ru.mirea.gracheva.movieproject"
         minSdk = 26
