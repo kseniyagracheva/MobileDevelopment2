@@ -1,4 +1,27 @@
-package ru.mirea.gracheva.ringstore;
+package ru.mirea.gracheva.ringstore.presentation;
+
+import android.content.Intent;
+import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+public class MainActivity extends AppCompatActivity {
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Запускаем MetalPriceActivity при старте приложения
+        Intent intent = new Intent(MainActivity.this, MetalPriceActivity.class);
+        startActivity(intent);
+
+        // Закрываем MainActivity, чтобы пользователь не вернулся назад
+        finish();
+    }
+}
+
+
+/*package ru.mirea.gracheva.ringstore.presentation;
 
 import android.os.Bundle;
 
@@ -7,6 +30,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+
+import ru.mirea.gracheva.ringstore.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -21,4 +46,7 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
     }
-}
+}*/
+
+
+
