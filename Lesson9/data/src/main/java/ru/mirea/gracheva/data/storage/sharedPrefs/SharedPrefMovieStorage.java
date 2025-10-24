@@ -5,9 +5,10 @@ import android.content.SharedPreferences;
 
 import java.time.LocalDate;
 
+import ru.mirea.gracheva.data.storage.MovieStorage;
 import ru.mirea.gracheva.data.storage.models.MovieStorageData;
 
-public class SharedPrefMovieStorage implements ru.mirea.gracheva.data.storage.MovieStorage {
+public class SharedPrefMovieStorage implements MovieStorage {
     private static final String PREFS_NAME = "movie_preferences";
     private static final String KEY_MOVIE_NAME = "movie_name";
     private static final String DATA_KEY = "movie_data";

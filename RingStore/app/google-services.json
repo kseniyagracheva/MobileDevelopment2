@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "883211720285",
+    "project_id": "ringstore-cda96",
+    "storage_bucket": "ringstore-cda96.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:883211720285:android:9b0ebe27e3be24aef61fb4",
+        "android_client_info": {
+          "package_name": "ru.mirea.gracheva.ringstore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRDVHOO_j5M7vT8hXgIHs8rfeGgecUsz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

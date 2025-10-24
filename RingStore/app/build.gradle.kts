@@ -1,10 +1,16 @@
 plugins {
     alias(libs.plugins.android.application)
+    alias(libs.plugins.google.gms.google.services)
+    id("androidx.navigation.safeargs")
 }
 
 android {
     namespace = "ru.mirea.gracheva.ringstore"
     compileSdk = 36
+
+    buildFeatures {
+        viewBinding = true
+    }
 
     defaultConfig {
         applicationId = "ru.mirea.gracheva.ringstore"
@@ -41,6 +47,10 @@ dependencies {
     implementation(project(":data"))
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+    implementation(libs.firebase.auth)
+    implementation(libs.navigation.runtime)
+    implementation("androidx.navigation:navigation-fragment:2.9.5")
+    implementation("androidx.navigation:navigation-ui:2.9.5")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
