@@ -117,3 +117,20 @@
       androidTestImplementation(libs.ext.junit)
       androidTestImplementation(libs.espresso.core)
     }
+
+**Прототип приложения**
+
+Далее в Figma был создан прототип будущего приложения:
+
+<img width="1155" height="631" alt="image" src="https://github.com/user-attachments/assets/e510ff05-8799-4ab2-be8f-dfbc5d89e5b6" />
+
+<img width="1165" height="636" alt="image" src="https://github.com/user-attachments/assets/1cc9a0d3-7b7e-4963-b0a2-51d0d7939f7f" />
+
+<img width="1266" height="609" alt="image" src="https://github.com/user-attachments/assets/7fdd42d9-0489-4870-81c7-1e255fd635da" />
+
+**Систематизация приложения**
+Далее проект RingStore был разбит на 3 модуля: app, data и domain.
+В каждом модуле будет реализована соответствующая логика.
+В данной работе был реализован функциона аутентификации пользователя. 
+
+Сначала в слое domain были созданы 2 репозитория, которые отвечают за аутентификацию пользователя. Первый - AuthRepository, который имеет 4 метода: login, loginAsGuest, register, logout. UserRoleRepository
