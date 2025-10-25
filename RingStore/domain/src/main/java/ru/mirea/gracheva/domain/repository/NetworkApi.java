@@ -4,8 +4,6 @@ import java.util.List;
 
 import ru.mirea.gracheva.domain.models.Ring;
 
-public interface RingRepository {
-    List<Ring> getRings();
-    void saveRings(List<Ring> rings);
-
+public interface NetworkApi {
+    List<Ring> fetchRings();
 }

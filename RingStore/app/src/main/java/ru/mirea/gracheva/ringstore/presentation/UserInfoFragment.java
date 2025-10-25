@@ -51,6 +51,8 @@ public class UserInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserInfoBinding.inflate(inflater, container, false);
         return binding.getRoot();
+
+
     }
 
     @Override
@@ -69,6 +71,10 @@ public class UserInfoFragment extends Fragment {
 
         binding.goToMetalsButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_userInfoFragment_to_metalPriceFragment);
+        });
+
+        binding.goToRingsButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_userInfoFragment_to_ringListFragment);
         });
 
         binding.logOutButton.setOnClickListener(v -> {

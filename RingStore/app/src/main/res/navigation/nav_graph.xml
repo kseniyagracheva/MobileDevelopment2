@@ -36,6 +36,9 @@
         <action
             android:id="@+id/action_userInfoFragment_to_authFragment"
             app:destination="@id/authFragment" />
+        <action
+            android:id="@+id/action_userInfoFragment_to_ringListFragment"
+            app:destination="@id/ringListFragment" />
     </fragment>
 
     <fragment
@@ -44,5 +47,13 @@
         android:label="MetalPrice">
     </fragment>
 
+    <fragment
+        android:id="@+id/ringListFragment"
+        android:name="ru.mirea.gracheva.ringstore.presentation.RingListFragment"
+        android:label="RingList">
+        <action
+            android:id="@+id/action_ringListFragment_to_userInfoFragment"
+            app:destination="@id/userInfoFragment" />
+    </fragment>
 
 </navigation>

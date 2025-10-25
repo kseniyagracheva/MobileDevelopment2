@@ -39,5 +39,15 @@
         android:backgroundTint="#444444"
         android:layout_marginTop="16dp"/>
 
+    <Button
+        android:id="@+id/goToRingsButton"
+        android:text="Посмотреть кольца"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF"
+        android:backgroundTint="#444444"
+        android:layout_marginTop="16dp"/>
+
+
 
 </LinearLayout>
