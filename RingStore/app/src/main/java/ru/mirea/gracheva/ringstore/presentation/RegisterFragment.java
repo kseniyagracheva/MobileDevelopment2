@@ -37,7 +37,7 @@ public class RegisterFragment extends Fragment {
         AuthDataSource authDataSource = new FireBaseAuthDataSource();
         UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(requireContext());
 
-        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource, new UserRoleRepositoryImpl(userRoleDataSource));
+        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource);
 
         registerUseCase = new RegisterUseCase(authRepository);
     }
@@ -61,9 +61,9 @@ public class RegisterFragment extends Fragment {
         String email = binding.emailInput.getText().toString();
         String password = binding.passwordInput.getText().toString();
 
-        registerUseCase.execute(email, password, new AuthRepository.AuthCallback() {
+        registerUseCase.execute(email, password, new AuthRepository.RegisterCallback() {
             @Override
-            public void onSuccess(User user) {
+            public void onSuccess() {
                 Toast.makeText(requireContext(), "Регистрация успешна", Toast.LENGTH_SHORT).show();
                 navController.navigate(R.id.action_registerFragment_to_authFragment);
             }

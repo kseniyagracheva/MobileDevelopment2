@@ -5,18 +5,11 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/ringsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
-
-        <TextView
-            android:id="@+id/ringsTextView"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textColor="#FFFFFF"
-            android:textSize="16sp"/>
-    </ScrollView>
+        android:layout_weight="1"/>
 
     <Button
         android:id="@+id/backToUserInfoButton"

@@ -42,7 +42,7 @@ public class UserInfoFragment extends Fragment {
         UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(requireContext());
 
         userRoleRepository = new UserRoleRepositoryImpl(userRoleDataSource);
-        authRepository = new AuthRepositoryImpl(authDataSource, userRoleRepository);
+        authRepository = new AuthRepositoryImpl(authDataSource);
 
         logOutUseCase = new LogOutUseCase(authRepository);
     }
@@ -67,6 +67,12 @@ public class UserInfoFragment extends Fragment {
             String role = args.getString("role", "");
             binding.emailText.setText(email.isEmpty() ? "Гость" : email);
             binding.roleText.setText("Роль: " + role);
+        }else {
+            // Получаем роль из userRoleRepository
+            UserRole currentRole = userRoleRepository.getRole(); // добавьте в интерфейс метод получения роли
+            String savedRole = currentRole != null ? currentRole.name() : "Гость";
+
+            binding.roleText.setText("Роль: " + savedRole);
         }
 
         binding.goToMetalsButton.setOnClickListener(v -> {

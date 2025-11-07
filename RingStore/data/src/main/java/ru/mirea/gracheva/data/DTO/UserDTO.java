@@ -4,12 +4,12 @@ package ru.mirea.gracheva.data.DTO;
 public class UserDTO {
     private String userId;
     private String email;
-    private UserRoleDTO userRoleDTO;
+//    private UserRoleDTO userRoleDTO;
 
-    public UserDTO(String userId, String email, UserRoleDTO userRoleDTO){
+    public UserDTO(String userId, String email){
         this.userId = userId;
         this.email = email;
-        this.userRoleDTO = userRoleDTO;
+//        this.userRoleDTO = userRoleDTO;
     }
 
     public String getUserId() {
@@ -20,7 +20,7 @@ public class UserDTO {
         return email;
     }
 
-    public UserRoleDTO getUserRoleDTO() {
-        return userRoleDTO;
-    }
+//    public UserRoleDTO getUserRoleDTO() {
+//        return userRoleDTO;
+//    }
 }

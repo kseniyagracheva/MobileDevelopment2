@@ -13,7 +13,9 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import ru.mirea.gracheva.domain.models.User;
+import ru.mirea.gracheva.domain.models.UserRole;
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
+import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
 import ru.mirea.gracheva.domain.usecases.authentification.auth.LoginAsGuestUseCase;
 import ru.mirea.gracheva.domain.usecases.authentification.auth.LoginUseCase;
 import ru.mirea.gracheva.data.repository.AuthRepositoryImpl;
@@ -41,10 +43,11 @@ public class AuthFragment extends Fragment {
         AuthDataSource authDataSource = new FireBaseAuthDataSource();
         UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(requireContext());
 
-        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource, new UserRoleRepositoryImpl(userRoleDataSource));
+        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource);
+        UserRoleRepository userRoleRepository = new UserRoleRepositoryImpl(userRoleDataSource);
 
-        loginUseCase = new LoginUseCase(authRepository);
-        loginAsGuestUseCase = new LoginAsGuestUseCase(authRepository);
+        loginUseCase = new LoginUseCase(authRepository, userRoleRepository);
+        loginAsGuestUseCase = new LoginAsGuestUseCase(authRepository, userRoleRepository);
     }
 
     @Override
@@ -77,14 +80,15 @@ public class AuthFragment extends Fragment {
             Toast.makeText(requireContext(), "Пожалуйста, введите пароль", Toast.LENGTH_SHORT).show();
             return;
         }
+
         loginUseCase.execute(email, password, new AuthRepository.AuthCallback() {
             @Override
-            public void onSuccess(User user) {
+            public void onSuccess(User user, UserRole role) {
                 Toast.makeText(requireContext(), "Добро пожаловать " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
                 Bundle bundle = new Bundle();
                 bundle.putString("email", user.getEmail());
-                bundle.putString("role", user.getRole().name());
+                bundle.putString("role", role.name());
 
                 navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
             }
@@ -96,14 +100,16 @@ public class AuthFragment extends Fragment {
         });
     }
 
+
     private void loginGuest() {
         loginAsGuestUseCase.execute(new AuthRepository.AuthCallback() {
             @Override
-            public void onSuccess(User user) {
-                Toast.makeText(requireContext(), "Вход выполнен как гость", Toast.LENGTH_SHORT).show();
+            public void onSuccess(User user, UserRole role) {
+                Toast.makeText(requireContext(), "Добро пожаловать " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
                 Bundle bundle = new Bundle();
-                bundle.putString("role", user.getRole().name());
+                bundle.putString("email", user.getEmail());
+                bundle.putString("role", role.name());
 
                 navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
             }

@@ -4,4 +4,5 @@ import ru.mirea.gracheva.domain.models.UserRole;
 
 public interface UserRoleRepository {
     public void saveRole(UserRole role);
+    UserRole getRole();
 }

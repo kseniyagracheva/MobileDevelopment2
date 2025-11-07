@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
+import androidx.recyclerview.widget.GridLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
@@ -27,6 +31,8 @@ import ru.mirea.gracheva.ringstore.databinding.FragmentRingListBinding;
 public class RingListFragment extends Fragment {
     private FragmentRingListBinding binding;
     private NavController navController;
+
+
     private GetRingsUseCase getRingsUseCase;
 
     @Nullable
@@ -46,6 +52,7 @@ public class RingListFragment extends Fragment {
         RingRepository ringRepository = new RingRepositoryImpl(getContext(), networkApi);
         getRingsUseCase = new GetRingsUseCase(ringRepository);
 
+        binding.ringsRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         loadRings();
 
         binding.backToUserInfoButton.setOnClickListener(v ->
@@ -53,38 +60,23 @@ public class RingListFragment extends Fragment {
     }
 
     private void loadRings() {
-        new AsyncTask<Void, Void, List<Ring>>() {
-            private Exception exception;
-
+        getRingsUseCase.execute(new RingRepository.Callback<List<Ring>>() {
             @Override
-            protected List<Ring> doInBackground(Void... voids) {
-                try {
-                    return getRingsUseCase.execute();
-                } catch (Exception e) {
-                    exception = e;
-                    return null;
-                }
+            public void onSuccess(List<Ring> rings) {
+                requireActivity().runOnUiThread(()->{
+                    RingsAdapter adapter = new RingsAdapter(rings);
+                    binding.ringsRecyclerView.setAdapter(adapter);
+                });
             }
-
             @Override
-            protected void onPostExecute(List<Ring> rings) {
-                if (exception != null) {
-                    Toast.makeText(requireContext(), "Ошибка загрузки: " + exception.getMessage(), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-                StringBuilder displayText = new StringBuilder();
-                for (Ring ring : rings) {
-                    displayText.append("ID: ").append(ring.getRingId()).append("\n");
-                    displayText.append("Металл: ").append(ring.getMetal()).append("\n");
-                    displayText.append("Цена: ").append(ring.getPrice()).append(" руб.\n\n");
-                }
-                binding.ringsTextView.setText(displayText.toString());
+            public void onError(Throwable t) {
+                requireActivity().runOnUiThread(()->{
+                    Toast.makeText(requireContext(),  "Ошибка загрузки: " + t.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
-        }.execute();
+        });
+
     }
-
-
-
 
     @Override
     public void onDestroyView() {
@@ -92,3 +84,4 @@ public class RingListFragment extends Fragment {
         binding = null;
     }
 }
+

@@ -9,7 +9,7 @@ public class RegisterUseCase {
         this.authRepository = authRepository;
     }
 
-    public void execute(String email, String password, AuthRepository.AuthCallback callback){
+    public void execute(String email, String password, AuthRepository.RegisterCallback callback){
         authRepository.register(email, password, callback);
     }
 }

@@ -5,6 +5,8 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 import ru.mirea.gracheva.data.DTO.RingEntity;
 import ru.mirea.gracheva.data.storage.room.AppDatabase;
@@ -18,6 +20,8 @@ public class RingRepositoryImpl implements RingRepository {
 
     private final RingDao ringDao;
     private final NetworkApi networkApi;
+
+    Executor executor = Executors.newSingleThreadExecutor();
 
     public RingRepositoryImpl(Context context, NetworkApi networkApi) {
         AppDatabase db = DatabaseProvider.getDatabase(context);
@@ -39,22 +43,20 @@ public class RingRepositoryImpl implements RingRepository {
     }
 
     @Override
-    public List<Ring> getRings() {
-        List<RingEntity> ringEntities = ringDao.getAllRings();
-        List<Ring> rings = new ArrayList<>();
-        for (RingEntity entity : ringEntities) {
-            rings.add(new Ring(entity.getRingId(), entity.getMetal(), entity.getPrice()));
-        }
-        return rings;
+    public void getRings(Callback callback) {
+        executor.execute(()-> {
+            try{
+                List<RingEntity> ringEntities = ringDao.getAllRings();
+                List<Ring> rings = new ArrayList<>();
+                for (RingEntity entity : ringEntities) {
+                    rings.add(new Ring(entity.getRingId(), entity.getMetal(), entity.getPrice()));
+                }
+                callback.onSuccess(rings);
+            }
+            catch (Exception e){
+                callback.onError(e);
+            }
+        });
     }
 
-    @Override
-    public void saveRings(List<Ring> rings) {
-        ringDao.clearRings();
-        List<RingEntity> entities = new ArrayList<>();
-        for (Ring ring : rings) {
-            entities.add(new RingEntity(ring.getRingId(), ring.getMetal(), ring.getPrice()));
-        }
-        ringDao.insertRings(entities);
-    }
 }

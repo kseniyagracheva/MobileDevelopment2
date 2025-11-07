@@ -15,9 +15,9 @@ public class SharedPreferencesUserRoleDataSource implements UserRoleDataSource {
     }
 
     @Override
-    public UserRoleDTO getRole() {
+    public String getRole() {
         String roleName = sharedPreferences.getString(KEY_USER_ROLE, "GUEST");
-        return new UserRoleDTO(roleName);
+        return roleName;
     }
 
     @Override

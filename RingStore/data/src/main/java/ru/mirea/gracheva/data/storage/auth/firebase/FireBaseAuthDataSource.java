@@ -15,17 +15,18 @@ public class FireBaseAuthDataSource implements AuthDataSource {
     }
 
     @Override
-    public void register(String email, String password, AuthCallback callback) {
+    public void register(String email, String password, AuthDataSource.RegisterCallback callback) {
         firebaseAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        FirebaseUser fbUser = task.getResult().getUser();
-                        UserDTO userDTO = new UserDTO(fbUser.getUid(), fbUser.getEmail(), new UserRoleDTO("AUTHORIZED"));
-                        callback.onSuccess(userDTO);
+                        callback.onSuccess();
                     } else {
-                        callback.onError(task.getException() != null ? task.getException().getMessage() : "Unknown error");
+                        callback.onError(task.getException() != null
+                                ? task.getException().getMessage()
+                                : "Ошибка регистрации");
                     }
                 });
+
     }
 
     @Override
@@ -34,8 +35,9 @@ public class FireBaseAuthDataSource implements AuthDataSource {
                 .addOnCompleteListener(task -> {
                     if(task.isSuccessful()){
                         FirebaseUser fbUser = task.getResult().getUser();
-                        UserDTO userDTO = new UserDTO(fbUser.getUid(), fbUser.getEmail(), new UserRoleDTO("AUTHORIZED"));
-                        callback.onSuccess(userDTO);
+                        UserDTO userDTO = new UserDTO(fbUser.getUid(), fbUser.getEmail());
+                        UserRoleDTO userRoleDTO = new UserRoleDTO("AUTHORIZED");
+                        callback.onSuccess(userDTO, userRoleDTO);
                     } else {
                         callback.onError(task.getException() != null ? task.getException().getMessage() : "Unknown error");
                     }
@@ -44,8 +46,9 @@ public class FireBaseAuthDataSource implements AuthDataSource {
 
     @Override
     public void loginAsGuest(AuthCallback callback) {
-        UserDTO guestUser = new UserDTO("", "guest@example.com", new UserRoleDTO("GUEST"));
-        callback.onSuccess(guestUser);
+        UserDTO guestUser = new UserDTO("", "guest@example.com");
+        UserRoleDTO userRoleDTO = new UserRoleDTO("GUEST");
+        callback.onSuccess(guestUser, userRoleDTO);
     }
 
     @Override
