@@ -1,25 +1,21 @@
 package ru.mirea.gracheva.lesson9.presentation;
 
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.ViewModelProvider;
 
-import ru.mirea.gracheva.data.storage.MovieStorage;
-import ru.mirea.gracheva.data.storage.sharedPrefs.SharedPrefMovieStorage;
 import ru.mirea.gracheva.lesson9.R;
-import ru.mirea.gracheva.data.repository.MovieRepositoryImpl;
 import ru.mirea.gracheva.lesson9.databinding.ActivityMainBinding;
-import ru.mirea.gracheva.domain.models.MovieDomain;
-import ru.mirea.gracheva.domain.repository.MovieRepository;
-import ru.mirea.gracheva.domain.usecases.GetFavoriteMovieUseCase;
-import ru.mirea.gracheva.domain.usecases.SaveMovieToFavoriteUseCase;
 
 public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
+    private MainViewModel vm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,17 +29,19 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        MovieStorage sharedPrefMovieStorage = new SharedPrefMovieStorage(this);
-        MovieRepository movieRepository = new MovieRepositoryImpl(sharedPrefMovieStorage);
+        vm = new ViewModelProvider(this).get(MainViewModel.class);
 
         binding.saveFavMovieButton.setOnClickListener(view -> {
-            Boolean result = new SaveMovieToFavoriteUseCase(movieRepository).execute(new MovieDomain(binding.enterFavMovieText.getText().toString()));
+            String movieName = binding.enterFavMovieText.getText().toString();
+            Boolean result = vm.saveFavoriteMovie(movieName);
             binding.noDataText.setText(String.format("Вы сохранили %s", result));
         });
 
         binding.getFavMovieButton.setOnClickListener(view -> {
-            MovieDomain movieDomain = new GetFavoriteMovieUseCase(movieRepository).execute();
-            binding.noDataText.setText(String.format("Ваш любимый фильм: %s", movieDomain.getName()));
+            String movieName = vm.getFavoriteMovie();
+            binding.noDataText.setText(String.format("Ваш любимый фильм: %s", movieName));
         });
+
+        Log.d(MainActivity.class.getSimpleName(), "MainActivity created");
     }
 }
