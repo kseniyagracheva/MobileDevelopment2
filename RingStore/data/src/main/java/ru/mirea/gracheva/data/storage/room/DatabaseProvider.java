@@ -17,6 +17,7 @@ public class DatabaseProvider {
                             AppDatabase.class, "app_database")
                     .fallbackToDestructiveMigration()
                     .build();
+            new Thread(() -> instance.clearAllTables()).start();
         }
         return instance;
     }

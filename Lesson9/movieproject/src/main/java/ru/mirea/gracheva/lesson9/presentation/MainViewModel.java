@@ -2,6 +2,7 @@ package ru.mirea.gracheva.lesson9.presentation;
 
 import android.util.Log;
 
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 
@@ -16,23 +17,26 @@ import ru.mirea.gracheva.domain.usecases.SaveMovieToFavoriteUseCase;
 public class MainViewModel extends ViewModel {
 
     private final MovieRepository movieRepository;
-
-    public MainViewModel() {
-        MovieStorage sharedPrefMovieStorage = new SharedPrefMovieStorage(App.getContext());
-        movieRepository = new MovieRepositoryImpl(sharedPrefMovieStorage);
-
-        Log.d(MainViewModel.class.getSimpleName(), "MainViewModel created");
+    private MutableLiveData<String> favoriteMovie = new MutableLiveData<>();
+    public MutableLiveData<String> getFavoriteMovie() {
+        return favoriteMovie;
     }
 
-    public Boolean saveFavoriteMovie(String movieName) {
+    public MainViewModel(MovieRepository movieRepository) {
+        Log.d(MainViewModel.class.getSimpleName().toString(), "MainViewModel created");
+        this.movieRepository = movieRepository;
+    }
+
+    public Boolean saveMovie(String movieName) {
         SaveMovieToFavoriteUseCase saveUseCase = new SaveMovieToFavoriteUseCase(movieRepository);
-        return saveUseCase.execute(new MovieDomain(movieName));
+        Boolean result = saveUseCase.execute(new MovieDomain(movieName));
+        return result;
     }
 
-    public String getFavoriteMovie() {
+    public void getMovie() {
         GetFavoriteMovieUseCase getUseCase = new GetFavoriteMovieUseCase(movieRepository);
         MovieDomain movie = getUseCase.execute();
-        return movie.getName();
+        favoriteMovie.setValue(String.format("Мой любимый фильм: %s", movie.getName()));
     }
 
     @Override

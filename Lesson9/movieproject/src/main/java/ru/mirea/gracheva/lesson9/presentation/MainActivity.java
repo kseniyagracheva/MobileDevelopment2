@@ -8,6 +8,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.mirea.gracheva.lesson9.R;
@@ -29,17 +30,22 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        vm = new ViewModelProvider(this).get(MainViewModel.class);
+        vm = new ViewModelProvider(this, new ViewModelFactory(this)).get(MainViewModel.class);
 
+        vm.getFavoriteMovie().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                binding.noDataText.setText(s);
+            }
+        });
         binding.saveFavMovieButton.setOnClickListener(view -> {
             String movieName = binding.enterFavMovieText.getText().toString();
-            Boolean result = vm.saveFavoriteMovie(movieName);
-            binding.noDataText.setText(String.format("Вы сохранили %s", result));
+            Boolean res = vm.saveMovie(movieName);
+            binding.noDataText.setText(String.format("Вы сохранили %s", res));
         });
 
         binding.getFavMovieButton.setOnClickListener(view -> {
-            String movieName = vm.getFavoriteMovie();
-            binding.noDataText.setText(String.format("Ваш любимый фильм: %s", movieName));
+            vm.getMovie();
         });
 
         Log.d(MainActivity.class.getSimpleName(), "MainActivity created");
