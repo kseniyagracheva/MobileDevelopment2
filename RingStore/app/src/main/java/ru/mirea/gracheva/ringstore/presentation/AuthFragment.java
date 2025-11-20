@@ -9,45 +9,27 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import ru.mirea.gracheva.domain.models.User;
-import ru.mirea.gracheva.domain.models.UserRole;
-import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
-import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
+
 import ru.mirea.gracheva.domain.usecases.authentification.auth.LoginAsGuestUseCase;
-import ru.mirea.gracheva.domain.usecases.authentification.auth.LoginUseCase;
-import ru.mirea.gracheva.data.repository.AuthRepositoryImpl;
-import ru.mirea.gracheva.data.repository.UserRoleRepositoryImpl;
-import ru.mirea.gracheva.data.storage.auth.firebase.FireBaseAuthDataSource;
-import ru.mirea.gracheva.data.storage.role.sharedPrefs.SharedPreferencesUserRoleDataSource;
-import ru.mirea.gracheva.data.storage.auth.AuthDataSource;
-import ru.mirea.gracheva.data.storage.role.UserRoleDataSource;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentAuthBinding;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModel;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModelFactory;
 
 public class AuthFragment extends Fragment {
 
+    private AuthViewModel vm;
     private FragmentAuthBinding binding;
     private NavController navController;
-
-    // UseCases
-    private LoginUseCase loginUseCase;
-    private LoginAsGuestUseCase loginAsGuestUseCase;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        AuthDataSource authDataSource = new FireBaseAuthDataSource();
-        UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(requireContext());
-
-        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource);
-        UserRoleRepository userRoleRepository = new UserRoleRepositoryImpl(userRoleDataSource);
-
-        loginUseCase = new LoginUseCase(authRepository, userRoleRepository);
-        loginAsGuestUseCase = new LoginAsGuestUseCase(authRepository, userRoleRepository);
+        vm = new ViewModelProvider(this, new AuthViewModelFactory(requireContext())).get(AuthViewModel.class);
     }
 
     @Override
@@ -59,66 +41,39 @@ public class AuthFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         navController = Navigation.findNavController(view);
 
-        binding.loginButton.setOnClickListener(v -> login());
-        binding.guestButton.setOnClickListener(v -> loginGuest());
+        vm.getUser().observe(getViewLifecycleOwner(), user ->{
+            Toast.makeText(requireContext(), "Добро пожаловать " + user.getEmail(), Toast.LENGTH_SHORT).show();
+            Bundle bundle = new Bundle();
+            bundle.putString("email", user.getEmail());
+            vm.getUserRole().observe(getViewLifecycleOwner(), role -> {
+                bundle.putString("role", role.name());
+                navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
+            });
+        });
+        vm.getError().observe(getViewLifecycleOwner(), error ->{
+            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+        });
+
+        binding.loginButton.setOnClickListener(v -> {
+            String email = binding.emailInput.getText().toString();
+            String password = binding.passwordInput.getText().toString();
+
+            if (email.isEmpty()) {
+                Toast.makeText(requireContext(), "Пожалуйста, введите email", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            if (password.isEmpty()) {
+                Toast.makeText(requireContext(), "Пожалуйста, введите пароль", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            vm.login(email,password);
+        });
+        binding.guestButton.setOnClickListener(v -> vm.loginAsGuest());
         binding.registerButton.setOnClickListener(v -> navController.navigate(R.id.action_authFragment_to_registerFragment));
-    }
-
-    private void login() {
-        String email = binding.emailInput.getText().toString();
-        String password = binding.passwordInput.getText().toString();
-
-        if (email.isEmpty()) {
-            Toast.makeText(requireContext(), "Пожалуйста, введите email", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        if (password.isEmpty()) {
-            Toast.makeText(requireContext(), "Пожалуйста, введите пароль", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        loginUseCase.execute(email, password, new AuthRepository.AuthCallback() {
-            @Override
-            public void onSuccess(User user, UserRole role) {
-                Toast.makeText(requireContext(), "Добро пожаловать " + user.getEmail(), Toast.LENGTH_SHORT).show();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("email", user.getEmail());
-                bundle.putString("role", role.name());
-
-                navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
-    }
-
-
-    private void loginGuest() {
-        loginAsGuestUseCase.execute(new AuthRepository.AuthCallback() {
-            @Override
-            public void onSuccess(User user, UserRole role) {
-                Toast.makeText(requireContext(), "Добро пожаловать " + user.getEmail(), Toast.LENGTH_SHORT).show();
-
-                Bundle bundle = new Bundle();
-                bundle.putString("email", user.getEmail());
-                bundle.putString("role", role.name());
-
-                navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
-            }
-        });
     }
 
     @Override

@@ -5,10 +5,6 @@ import android.util.Log;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-
-import ru.mirea.gracheva.data.storage.MovieStorage;
-import ru.mirea.gracheva.data.storage.sharedPrefs.SharedPrefMovieStorage;
-import ru.mirea.gracheva.data.repository.MovieRepositoryImpl;
 import ru.mirea.gracheva.domain.models.MovieDomain;
 import ru.mirea.gracheva.domain.repository.MovieRepository;
 import ru.mirea.gracheva.domain.usecases.GetFavoriteMovieUseCase;
