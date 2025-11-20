@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
@@ -23,23 +24,23 @@ import ru.mirea.gracheva.data.storage.auth.AuthDataSource;
 import ru.mirea.gracheva.data.storage.role.UserRoleDataSource;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentRegisterBinding;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModel;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModelFactory;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModel;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModelFactory;
 
 public class RegisterFragment extends Fragment {
     private FragmentRegisterBinding binding;
     private NavController navController;
 
-    private RegisterUseCase registerUseCase;
+    private RegisterViewModel vm;
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        vm = new ViewModelProvider(this, new RegisterViewModelFactory(requireContext())).get(RegisterViewModel.class);
 
-        AuthDataSource authDataSource = new FireBaseAuthDataSource();
-        UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(requireContext());
-
-        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource);
-
-        registerUseCase = new RegisterUseCase(authRepository);
     }
 
     @Override
@@ -51,27 +52,23 @@ public class RegisterFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         navController = Navigation.findNavController(view);
 
-        binding.registerButton.setOnClickListener(v -> register());
-    }
-
-    private void register() {
-        String email = binding.emailInput.getText().toString();
-        String password = binding.passwordInput.getText().toString();
-
-        registerUseCase.execute(email, password, new AuthRepository.RegisterCallback() {
-            @Override
-            public void onSuccess() {
+        vm.ifSuccess().observe(getViewLifecycleOwner(), success ->{
+            if (success){
                 Toast.makeText(requireContext(), "Регистрация успешна", Toast.LENGTH_SHORT).show();
                 navController.navigate(R.id.action_registerFragment_to_authFragment);
             }
+        });
+        vm.getError().observe(getViewLifecycleOwner(), error ->{
+            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+        });
 
-            @Override
-            public void onError(String errorMessage) {
-                Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
-            }
+        binding.registerButton.setOnClickListener(v -> {
+            String email = binding.emailInput.getText().toString();
+            String password = binding.passwordInput.getText().toString();
+
+            vm.register(email,password);
         });
     }
 

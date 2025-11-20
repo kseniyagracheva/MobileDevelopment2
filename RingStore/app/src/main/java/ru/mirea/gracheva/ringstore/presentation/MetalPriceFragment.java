@@ -12,46 +12,48 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentMetalPriceBinding;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.metalPriceInfo.MetalPriceInfoViewModel;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.metalPriceInfo.MetalPriceInfoViewModelFactory;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModel;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModelFactory;
 
 public class MetalPriceFragment extends Fragment {
 
     private FragmentMetalPriceBinding binding;
-    private GetMetalPriceInfo getMetalPriceInfo;
+    private MetalPriceInfoViewModel vm;
 
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        vm = new ViewModelProvider(this, new MetalPriceInfoViewModelFactory()).get(MetalPriceInfoViewModel.class);
+
+    }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentMetalPriceBinding.inflate(inflater, container, false);
         return binding.getRoot();
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
-        getMetalPriceInfo = new GetMetalPriceInfo(new MetalPriceInfoRepositoryImpl());
-
-        getMetalPriceInfo.fetchMetalPriceInfo(new MetalPriceInfoRepository.MetalPriceCallback() {
-            @Override
-            public void onSuccess(MetalPriceInfo metalPriceInfo) {
-                if(getActivity() == null) return;
-                getActivity().runOnUiThread(() -> {
-                    binding.metalName.setText(metalPriceInfo.getMetalName());
-                    binding.price.setText(String.valueOf(metalPriceInfo.getPrice()));
-                    binding.currency.setText(metalPriceInfo.getCurrency());
-                    binding.lastUpdated.setText(metalPriceInfo.getLastUpdated());
-                });
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                if(getActivity() == null) return;
-                getActivity().runOnUiThread(() ->
-                        Toast.makeText(getActivity(), "[translate:Ошибка:] " + errorMessage, Toast.LENGTH_LONG).show()
-                );
-            }
+        vm.getMetalPriveInfo().observe(getViewLifecycleOwner(), metalPriceInfo ->{
+            binding.metalName.setText(metalPriceInfo.getMetalName());
+            binding.price.setText(String.valueOf(metalPriceInfo.getPrice()));
+            binding.currency.setText(metalPriceInfo.getCurrency());
+            binding.lastUpdated.setText(metalPriceInfo.getLastUpdated());
         });
+        vm.getError().observe(getViewLifecycleOwner(), error ->{
+            Toast.makeText(getActivity(), "[translate:Ошибка:] " + error, Toast.LENGTH_LONG).show();
+        });
+        vm.fetch();
 
         binding.backButton.setOnClickListener(v -> {
             if (getActivity() != null) {
