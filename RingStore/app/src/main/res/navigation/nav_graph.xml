@@ -45,6 +45,9 @@
         android:id="@+id/metalPriceFragment"
         android:name="ru.mirea.gracheva.ringstore.presentation.MetalPriceFragment"
         android:label="MetalPrice">
+        <action
+            android:id="@+id/action_metalPriceFragment_to_userInfoFragment"
+            app:destination="@id/userInfoFragment" />
     </fragment>
 
     <fragment
