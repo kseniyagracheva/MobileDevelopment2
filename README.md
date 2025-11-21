@@ -25,7 +25,14 @@
 
 Аналогичные изменения были сделаны для фрагментов: RegisterFragment, MetalPriceInfoFragment, RingListFragment, UserInfoFragment.
 
+Также был использован класс MediatorLiveData для получения данных из разных источников. Для полчуения данных о стоимости драгоценных металлов были созданы отдельные репозитории, которые представляют собой замоканные данные NetworApi. Во MetalPriceInfoViewModel было реазлизовано получение данных из разных источников и при помощи MediatorLiveData происходит их объединение.
+
+<img width="377" height="839" alt="image" src="https://github.com/user-attachments/assets/4291c5ff-2d2e-41ca-9df1-41950e0550ea" />
+
+
 Таким образом, структура файлов приложения в слое представления выглядит таким образом:
+
 <img width="520" height="818" alt="image" src="https://github.com/user-attachments/assets/847a7ffe-adec-4319-876d-036abdafa533" />
+
 
 
