@@ -1,5 +1,4 @@
-package ru.mirea.gracheva.ringstore.presentation.viewmodel.auth;
-
+package ru.mirea.gracheva.ringstore.presentation.viewmodel.userInfo;
 
 import android.content.Context;
 
@@ -16,19 +15,19 @@ import ru.mirea.gracheva.data.storage.role.sharedPrefs.SharedPreferencesUserRole
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
 import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
 
-public class AuthViewModelFactory implements ViewModelProvider.Factory {
+public class UserInfoViewModelFactory implements ViewModelProvider.Factory {
     private Context context;
-    public AuthViewModelFactory(Context context){
+    public UserInfoViewModelFactory(Context context){
         this.context = context;
     }
+
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass){
         AuthDataSource authDataSource = new FireBaseAuthDataSource();
         UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(context);
-        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource);
         UserRoleRepository userRoleRepository = new UserRoleRepositoryImpl(userRoleDataSource);
-        return (T) new AuthViewModel(authRepository, userRoleRepository);
+        AuthRepository authRepository = new AuthRepositoryImpl(authDataSource);
+        return (T) new UserInfoViewModel(authRepository, userRoleRepository);
     }
-
 }

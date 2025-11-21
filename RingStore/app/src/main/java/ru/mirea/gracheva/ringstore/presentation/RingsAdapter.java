@@ -17,6 +17,10 @@ public class RingsAdapter extends RecyclerView.Adapter<RingsAdapter.RingViewHold
     public RingsAdapter(List<Ring> rings) {
         this.rings = rings;
     }
+    public void updateData(List<Ring> newRings) {
+        this.rings = newRings;
+        notifyDataSetChanged();
+    }
 
     public static class RingViewHolder extends RecyclerView.ViewHolder {
         private final ItemCardRingBinding binding;

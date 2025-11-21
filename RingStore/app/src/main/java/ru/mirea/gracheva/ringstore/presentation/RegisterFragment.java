@@ -13,19 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import ru.mirea.gracheva.domain.models.User;
-import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
-import ru.mirea.gracheva.domain.usecases.authentification.register.RegisterUseCase;
-import ru.mirea.gracheva.data.repository.AuthRepositoryImpl;
-import ru.mirea.gracheva.data.repository.UserRoleRepositoryImpl;
-import ru.mirea.gracheva.data.storage.auth.firebase.FireBaseAuthDataSource;
-import ru.mirea.gracheva.data.storage.role.sharedPrefs.SharedPreferencesUserRoleDataSource;
-import ru.mirea.gracheva.data.storage.auth.AuthDataSource;
-import ru.mirea.gracheva.data.storage.role.UserRoleDataSource;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentRegisterBinding;
-import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModel;
-import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModelFactory;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModel;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModelFactory;
 

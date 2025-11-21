@@ -9,21 +9,17 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-import ru.mirea.gracheva.data.repository.AuthRepositoryImpl;
-import ru.mirea.gracheva.data.repository.UserRoleRepositoryImpl;
-import ru.mirea.gracheva.data.storage.auth.AuthDataSource;
-import ru.mirea.gracheva.data.storage.auth.firebase.FireBaseAuthDataSource;
-import ru.mirea.gracheva.data.storage.role.UserRoleDataSource;
-import ru.mirea.gracheva.data.storage.role.sharedPrefs.SharedPreferencesUserRoleDataSource;
-import ru.mirea.gracheva.domain.models.UserRole;
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
 import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
 import ru.mirea.gracheva.domain.usecases.authentification.auth.LogOutUseCase;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentUserInfoBinding;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.userInfo.UserInfoViewModel;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.userInfo.UserInfoViewModelFactory;
 
 public class UserInfoFragment extends Fragment {
     private FragmentUserInfoBinding binding;
@@ -34,15 +30,13 @@ public class UserInfoFragment extends Fragment {
     private UserRoleRepository userRoleRepository;
     private AuthRepository authRepository;
 
+    private UserInfoViewModel vm;
+
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        vm = new ViewModelProvider(this, new UserInfoViewModelFactory(requireContext())).get(UserInfoViewModel.class);
 
-        AuthDataSource authDataSource = new FireBaseAuthDataSource();
-        UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(requireContext());
-
-        userRoleRepository = new UserRoleRepositoryImpl(userRoleDataSource);
-        authRepository = new AuthRepositoryImpl(authDataSource);
 
         logOutUseCase = new LogOutUseCase(authRepository);
     }
@@ -51,8 +45,6 @@ public class UserInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserInfoBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
-
     }
 
     @Override
@@ -61,19 +53,19 @@ public class UserInfoFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
-        Bundle args = getArguments();
-        if (args != null) {
-            String email = args.getString("email", "");
-            String role = args.getString("role", "");
-            binding.emailText.setText(email.isEmpty() ? "Гость" : email);
-            binding.roleText.setText("Роль: " + role);
-        }else {
-            // Получаем роль из userRoleRepository
-            UserRole currentRole = userRoleRepository.getRole(); // добавьте в интерфейс метод получения роли
-            String savedRole = currentRole != null ? currentRole.name() : "Гость";
+        vm.getUserRole().observe(getViewLifecycleOwner(), currentRole -> {
+            Bundle args = getArguments();
+            if (args != null) {
+                String email = args.getString("email", "");
+                String role = args.getString("role", "");
+                binding.emailText.setText(email.isEmpty() ? "Гость" : email);
+                binding.roleText.setText("Роль: " + role);
+            }else {
+                binding.roleText.setText("Роль: " + (currentRole != null ? currentRole.name(): "Гость"));
+            }
+        });
 
-            binding.roleText.setText("Роль: " + savedRole);
-        }
+        vm.loadUserRole();
 
         binding.goToMetalsButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_userInfoFragment_to_metalPriceFragment);
@@ -83,20 +75,17 @@ public class UserInfoFragment extends Fragment {
             navController.navigate(R.id.action_userInfoFragment_to_ringListFragment);
         });
 
+        vm.ifSuccess().observe(getViewLifecycleOwner(), success ->{
+            if (success){
+                Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
+                navController.navigate(R.id.action_userInfoFragment_to_authFragment);
+            }
+        });
+        vm.getError().observe(getViewLifecycleOwner(), error ->{
+            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
+        });
         binding.logOutButton.setOnClickListener(v -> {
-            logOutUseCase.execute(new AuthRepository.Callback() {
-                @Override
-                public void onSuccess() {
-                    userRoleRepository.saveRole(UserRole.GUEST);
-                    Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
-                    navController.navigate(R.id.action_userInfoFragment_to_authFragment);
-                }
-
-                @Override
-                public void onError(String errorMessage) {
-                    Toast.makeText(requireContext(), errorMessage, Toast.LENGTH_SHORT).show();
-                }
-            });
+            vm.logout();
         });
     }
 

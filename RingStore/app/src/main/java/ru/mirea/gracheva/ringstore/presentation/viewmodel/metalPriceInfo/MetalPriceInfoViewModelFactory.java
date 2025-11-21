@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import ru.mirea.gracheva.data.repository.MetalPriceInfoRepositoryImpl;
 import ru.mirea.gracheva.domain.repository.MetalPriceInfoRepository;
-import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModel;
 
 public class MetalPriceInfoViewModelFactory implements ViewModelProvider.Factory {
     @NonNull

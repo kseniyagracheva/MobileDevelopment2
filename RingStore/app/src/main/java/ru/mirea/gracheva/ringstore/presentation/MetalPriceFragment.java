@@ -2,11 +2,6 @@ package ru.mirea.gracheva.ringstore.presentation;
 
 import android.os.Bundle;
 import android.widget.Toast;
-
-import ru.mirea.gracheva.domain.usecases.metalInfo.GetMetalPriceInfo;
-import ru.mirea.gracheva.data.repository.MetalPriceInfoRepositoryImpl;
-import ru.mirea.gracheva.domain.models.MetalPriceInfo;
-import ru.mirea.gracheva.domain.repository.MetalPriceInfoRepository;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,12 +11,9 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 
-import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentMetalPriceBinding;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.metalPriceInfo.MetalPriceInfoViewModel;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.metalPriceInfo.MetalPriceInfoViewModelFactory;
-import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModel;
-import ru.mirea.gracheva.ringstore.presentation.viewmodel.register.RegisterViewModelFactory;
 
 public class MetalPriceFragment extends Fragment {
 

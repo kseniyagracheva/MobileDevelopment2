@@ -13,8 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
-
-import ru.mirea.gracheva.domain.usecases.authentification.auth.LoginAsGuestUseCase;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentAuthBinding;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModel;

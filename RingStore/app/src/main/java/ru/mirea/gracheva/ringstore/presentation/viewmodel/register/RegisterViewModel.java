@@ -4,10 +4,7 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import ru.mirea.gracheva.domain.models.User;
-import ru.mirea.gracheva.domain.models.UserRole;
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
-import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
 import ru.mirea.gracheva.domain.usecases.authentification.register.RegisterUseCase;
 
 public class RegisterViewModel extends ViewModel {
