@@ -23,7 +23,6 @@ import ru.mirea.gracheva.ringstore.presentation.viewmodel.rings.RingListViewMode
 public class RingListFragment extends Fragment {
     private FragmentRingListBinding binding;
     private NavController navController;
-
     private RingListViewModel vm;
 
     @Nullable
