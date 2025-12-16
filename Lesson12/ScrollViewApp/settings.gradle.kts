@@ -23,3 +23,4 @@ rootProject.name = "ScrollViewApp"
 include(":app")
 include(":listviewapp")
 include(":recyclerviewapp")
+include(":retrofitapp")
