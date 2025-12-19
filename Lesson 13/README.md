@@ -246,6 +246,137 @@
 *RingStore*
 -----
 
+Далее Retrofit был внедрен в приложение RingStore. При помощи данного инструмента были получены данные о ценах на металлы из внешнго источника.
+
+Сначала был настроен файл MetalPriceResponse, в котором был описан объект для получения информации
+    
+    public class MetalPriceResponse {
+        @SerializedName("Date") public String date;
+        @SerializedName("MetalID") public int metalNumCode;  
+        @SerializedName("CertificateRubles") public double officialRate;  
+    }
+
+Затем был создан интерфейс с методами для получения данных из запроса. Для каждого металла свой.
+
+    public interface MetalPriceApi {
+        @GET("ingots/prices/0")  
+        Call<List<MetalPriceResponse>> getGoldPrices();
+    
+        @GET("ingots/prices/1") 
+        Call<List<MetalPriceResponse>> getSilverPrices();
+    
+        @GET("ingots/prices/2")
+        Call<List<MetalPriceResponse>> getPlatinumPrices();
+    }
+
+Затем был создан класс-синглтон MetalPriceService, для сетевых запросов к API с ценами на металлы.
+
+    public class MetalPriceService {
+        private static MetalPriceApi api;
+    
+    
+        static {
+            OkHttpClient.Builder clientBuilder = new OkHttpClient.Builder();
+            clientBuilder.connectTimeout(30, TimeUnit.SECONDS);
+            clientBuilder.readTimeout(30, TimeUnit.SECONDS);
+            clientBuilder.addInterceptor(new HttpLoggingInterceptor()
+                    .setLevel(HttpLoggingInterceptor.Level.BODY));
+    
+            OkHttpClient client = clientBuilder.build();
+    
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl("https://api.nbrb.by/")
+                    .client(client)
+                    .addConverterFactory(GsonConverterFactory.create())
+                    .build();
+    
+            api = retrofit.create(MetalPriceApi.class);
+        }
+        public static void getGoldPrice(GoldPriceInfoRepository.MetalPriceCallback callback) {
+            Call<List<MetalPriceResponse>> call = api.getGoldPrices();  
+    
+            call.enqueue(new Callback<List<MetalPriceResponse>>() {
+                @Override
+                public void onResponse(Call<List<MetalPriceResponse>> call,
+                                       Response<List<MetalPriceResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                        MetalPriceResponse gold = response.body().get(0);
+                        MetalPriceInfo info = new MetalPriceInfo(
+                                "Gold",
+                                gold.officialRate,
+                                gold.date.split("T")[0]  
+                        );
+                        callback.onSuccess(info);
+                    } else {
+                        callback.onError("Золото не найдено");
+                    }
+                }
+    
+                @Override
+                public void onFailure(Call<List<MetalPriceResponse>> call, Throwable t) {
+                    callback.onError("Ошибка сети: " + t.getMessage());
+                }
+            });
+        }
+    
+        public static void getSilverPrice(SilverPriceInfoRepository.MetalPriceCallback callback) {
+            Call<List<MetalPriceResponse>> call = api.getSilverPrices();  
+    
+            call.enqueue(new Callback<List<MetalPriceResponse>>() {
+                @Override
+                public void onResponse(Call<List<MetalPriceResponse>> call,
+                                       Response<List<MetalPriceResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                        MetalPriceResponse silver = response.body().get(0);
+                        MetalPriceInfo info = new MetalPriceInfo(
+                                "Silver",
+                                silver.officialRate,
+                                silver.date.split("T")[0]
+                        );
+                        callback.onSuccess(info);
+                    } else {
+                        callback.onError("Серебро не найдено");
+                    }
+                }
+    
+                @Override
+                public void onFailure(Call<List<MetalPriceResponse>> call, Throwable t) {
+                    callback.onError("Ошибка сети: " + t.getMessage());
+                }
+            });
+        }
+    
+        public static void getPlatinumPrice(PlatinumPriceInfoRepository.MetalPriceCallback callback) {
+            Call<List<MetalPriceResponse>> call = api.getPlatinumPrices();  
+    
+            call.enqueue(new Callback<List<MetalPriceResponse>>() {
+                @Override
+                public void onResponse(Call<List<MetalPriceResponse>> call,
+                                       Response<List<MetalPriceResponse>> response) {
+                    if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
+                        MetalPriceResponse platinum = response.body().get(0);
+                        MetalPriceInfo info = new MetalPriceInfo(
+                                "Platinum",
+                                platinum.officialRate,
+                                platinum.date.split("T")[0]
+                        );
+                        callback.onSuccess(info);
+                    } else {
+                        callback.onError("Платина не найдена");
+                    }
+                }
+    
+                @Override
+                public void onFailure(Call<List<MetalPriceResponse>> call, Throwable t) {
+                    callback.onError("Ошибка сети: " + t.getMessage());
+                }
+            });
+        }
+    }
+
+В результате получено следующее:
+
+<img width="381" height="838" alt="image" src="https://github.com/user-attachments/assets/5e8c5eb3-bd07-4090-b582-16ee4d31d466" />
 
 
 
