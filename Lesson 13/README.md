@@ -1,6 +1,9 @@
 **Отчет по практике №5**
 -----
+
 *Retrofit*
+-----
+
 Т.К. Retrofit - библиотека для работы с веб-сервисами, то необходимо разрешить приложению доступ к интернету. Для этого необходимо добавить разрешение в манифест-файл. 
 
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -241,6 +244,7 @@
 <img width="366" height="814" alt="image" src="https://github.com/user-attachments/assets/26f7d66a-6589-43c2-bee3-747d51cc2b54" />
 
 *RingStore*
+-----
 
 
 
