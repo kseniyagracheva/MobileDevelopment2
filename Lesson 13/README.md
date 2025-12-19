@@ -379,6 +379,41 @@
 <img width="381" height="838" alt="image" src="https://github.com/user-attachments/assets/5e8c5eb3-bd07-4090-b582-16ee4d31d466" />
 
 
+Затем при помощи Picasso были добавлены картинки
+Предварительно картинки были залиты на бесплатный хостинг, откуда были получены постоянные их ссылки.
+Затем, была изменена модель MetalPriceInfo, туда была добавлена ссылка на изображение.
 
+    public class MetalPriceInfo {
+        private String metalName;
+        private double price;
+        private String lastUpdated;
+        private String imageUrl;
+    
+        public MetalPriceInfo(String metalName, double price, String lastUpdated, String imageUrl) {
+            this.metalName = metalName;
+            this.price = price;
+            this.lastUpdated = lastUpdated;
+            this.imageUrl = imageUrl;
+        }
+    
+        public String getMetalName() { return metalName; }
+        public double getPrice() { return price; }
+        public String getLastUpdated() { return lastUpdated; }
+        public String getImageUrl() {return imageUrl;}
+    }
+
+Затем была добалвена ссылка в MetalPriceService на изображение для каждого металла. Вот пример:
+
+                    MetalPriceInfo info = new MetalPriceInfo(
+                            "Platinum",
+                            platinum.officialRate,
+                            platinum.date.split("T")[0],
+                            "https://i.postimg.cc/W37bLTJq/Platinum.jpg"
+
+Таким образом получилось следующее
+
+<img width="388" height="852" alt="image" src="https://github.com/user-attachments/assets/0ac8c408-9753-4215-ad7a-16f95102548b" />
+
+                            
 
 
