@@ -16,10 +16,9 @@
         android:padding="16dp">
 
         <ImageView
-            android:id="@+id/ringImageView"
+            android:id="@+id/metalImageView"
             android:layout_width="150dp"
             android:layout_height="150dp"
-            android:src="@raw/metal"
             android:contentDescription="Изображение металла" />
 
 

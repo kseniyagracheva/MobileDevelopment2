@@ -48,7 +48,8 @@ public class MetalPriceService {
                     MetalPriceInfo info = new MetalPriceInfo(
                             "Gold",
                             gold.officialRate,
-                            gold.date.split("T")[0]
+                            gold.date.split("T")[0],
+                            "https://i.postimg.cc/HnsWTRwG/Gold.jpg"
                     );
                     callback.onSuccess(info);
                 } else {
@@ -75,7 +76,8 @@ public class MetalPriceService {
                     MetalPriceInfo info = new MetalPriceInfo(
                             "Silver",
                             silver.officialRate,
-                            silver.date.split("T")[0]
+                            silver.date.split("T")[0],
+                            "https://i.postimg.cc/1XjSstR6/Silver.jpg"
                     );
                     callback.onSuccess(info);
                 } else {
@@ -102,7 +104,8 @@ public class MetalPriceService {
                     MetalPriceInfo info = new MetalPriceInfo(
                             "Platinum",
                             platinum.officialRate,
-                            platinum.date.split("T")[0]
+                            platinum.date.split("T")[0],
+                            "https://i.postimg.cc/W37bLTJq/Platinum.jpg"
                     );
                     callback.onSuccess(info);
                 } else {

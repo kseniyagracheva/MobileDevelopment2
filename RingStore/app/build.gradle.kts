@@ -52,6 +52,7 @@ dependencies {
     implementation("androidx.navigation:navigation-fragment:2.9.5")
     implementation("androidx.navigation:navigation-ui:2.9.5")
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation("com.squareup.picasso:picasso:2.71828")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
