@@ -16,7 +16,6 @@ public class MetalPriceInfo {
     public String getMetalName() { return metalName; }
     public double getPrice() { return price; }
     public String getLastUpdated() { return lastUpdated; }
-
     public String getImageUrl() {return imageUrl;}
 }
 
