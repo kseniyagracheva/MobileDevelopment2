@@ -187,6 +187,60 @@
 <img width="465" height="817" alt="image" src="https://github.com/user-attachments/assets/15cbd12b-06a8-46d3-9be0-8f7c54052b2a" />
 <img width="1897" height="117" alt="image" src="https://github.com/user-attachments/assets/a3556a31-91d9-4328-93db-2e158966c19a" />
 
+Затем в TodoViewHolder были внесены изменения для отображения картинок при помощи Picasso
+
+    public class TodoViewHolder extends RecyclerView.ViewHolder {
+        TextView textViewTitle;
+        CheckBox checkBoxCompleted;
+    
+        ImageView image;
+        public TodoViewHolder(@NonNull View itemView){
+            super(itemView);
+            textViewTitle = itemView.findViewById(R.id.textViewTitle);
+            checkBoxCompleted = itemView.findViewById(R.id.checkBoxCompleted);
+            image = itemView.findViewById(R.id.imageTodo);
+        }
+        public void bind(final Todo todo, final ApiInterface apiInterface, final int position){
+            textViewTitle.setText(todo.getTitle());
+    
+            Picasso.get()
+                    .load("https://dummyimage.com/64x64/ff6b6b/ffffff.png&text=" + String.valueOf(todo.getId()))
+                    .placeholder(android.R.color.darker_gray)
+                    .error(android.R.color.holo_red_dark)
+                    .fit()
+                    .tag(this)
+                    .into(image);
+    
+            checkBoxCompleted.setOnCheckedChangeListener(null);
+            checkBoxCompleted.setChecked(todo.getCompleted());
+    
+            checkBoxCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                todo.setCompleted(isChecked);
+    
+                Call<Todo> call = apiInterface.updateTodo(todo.getId(), todo);
+                call.enqueue(new Callback<Todo>() {
+                    @Override
+                    public void onResponse(Call<Todo> call, Response<Todo> response) {
+                        if (response.isSuccessful()){
+                            Log.d("TodoAdapter", "Todo" + todo.getId() + " updated");
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<Todo> call, Throwable t) {
+                        Log.e("TodoAdapter", "Update failed: " + t.getMessage());
+                        checkBoxCompleted.setChecked(!isChecked);
+                        todo.setCompleted(!isChecked);
+                    }
+                });
+            });
+        }
+    }
+
+Теперь в списке отображается картинка
+
+<img width="366" height="814" alt="image" src="https://github.com/user-attachments/assets/26f7d66a-6589-43c2-bee3-747d51cc2b54" />
+
+*RingStore*
 
 
 
