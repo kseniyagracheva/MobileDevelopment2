@@ -37,18 +37,18 @@ public class MetalPriceService {
         api = retrofit.create(MetalPriceApi.class);
     }
     public static void getGoldPrice(GoldPriceInfoRepository.MetalPriceCallback callback) {
-        Call<List<MetalPriceResponse>> call = api.getGoldPrices();  // ✅ Отдельный эндпоинт
+        Call<List<MetalPriceResponse>> call = api.getGoldPrices();
 
         call.enqueue(new Callback<List<MetalPriceResponse>>() {
             @Override
             public void onResponse(Call<List<MetalPriceResponse>> call,
                                    Response<List<MetalPriceResponse>> response) {
                 if (response.isSuccessful() && response.body() != null && !response.body().isEmpty()) {
-                    MetalPriceResponse gold = response.body().get(0);  // Первый = 1г
+                    MetalPriceResponse gold = response.body().get(0);
                     MetalPriceInfo info = new MetalPriceInfo(
                             "Gold",
-                            gold.officialRate,  // 408.48 BYN
-                            gold.date.split("T")[0]  // "2025-12-20"
+                            gold.officialRate,
+                            gold.date.split("T")[0]
                     );
                     callback.onSuccess(info);
                 } else {
@@ -64,7 +64,7 @@ public class MetalPriceService {
     }
 
     public static void getSilverPrice(SilverPriceInfoRepository.MetalPriceCallback callback) {
-        Call<List<MetalPriceResponse>> call = api.getSilverPrices();  // ✅ Серебро
+        Call<List<MetalPriceResponse>> call = api.getSilverPrices();
 
         call.enqueue(new Callback<List<MetalPriceResponse>>() {
             @Override
@@ -91,7 +91,7 @@ public class MetalPriceService {
     }
 
     public static void getPlatinumPrice(PlatinumPriceInfoRepository.MetalPriceCallback callback) {
-        Call<List<MetalPriceResponse>> call = api.getPlatinumPrices();  // ✅ Платина
+        Call<List<MetalPriceResponse>> call = api.getPlatinumPrices();
 
         call.enqueue(new Callback<List<MetalPriceResponse>>() {
             @Override
@@ -115,15 +115,5 @@ public class MetalPriceService {
                 callback.onError("Ошибка сети: " + t.getMessage());
             }
         });
-    }
-
-
-    private static boolean matchesMetal(MetalPriceResponse item, String metalName) {
-        switch (metalName.toLowerCase()) {
-            case "gold": return item.metalNumCode == 0;
-            case "platinum": return item.metalNumCode == 2;
-            case "silver": return item.metalNumCode == 1;
-            default: return false;
-        }
     }
 }
