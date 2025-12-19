@@ -3,9 +3,12 @@ package ru.mirea.gracheva.retrofitapp;
 import android.util.Log;
 import android.view.View;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.squareup.picasso.Picasso;
 
 import org.jspecify.annotations.NonNull;
 
@@ -16,13 +19,24 @@ import retrofit2.Response;
 public class TodoViewHolder extends RecyclerView.ViewHolder {
     TextView textViewTitle;
     CheckBox checkBoxCompleted;
+
+    ImageView image;
     public TodoViewHolder(@NonNull View itemView){
         super(itemView);
         textViewTitle = itemView.findViewById(R.id.textViewTitle);
         checkBoxCompleted = itemView.findViewById(R.id.checkBoxCompleted);
+        image = itemView.findViewById(R.id.imageTodo);
     }
     public void bind(final Todo todo, final ApiInterface apiInterface, final int position){
         textViewTitle.setText(todo.getTitle());
+
+        Picasso.get()
+                .load("https://dummyimage.com/64x64/ff6b6b/ffffff.png&text=" + String.valueOf(todo.getId()))
+                .placeholder(android.R.color.darker_gray)
+                .error(android.R.color.holo_red_dark)
+                .fit()
+                .tag(this)
+                .into(image);
 
         checkBoxCompleted.setOnCheckedChangeListener(null);
         checkBoxCompleted.setChecked(todo.getCompleted());

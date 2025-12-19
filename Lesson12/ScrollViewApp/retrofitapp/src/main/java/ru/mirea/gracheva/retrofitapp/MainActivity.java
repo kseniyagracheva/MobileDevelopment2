@@ -12,6 +12,8 @@ import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import retrofit2.Call;
@@ -63,4 +65,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
+    @Override
+    protected void onDestroy() {
+        Picasso.get().cancelTag(this);
+        super.onDestroy();
+    }
+
 }
