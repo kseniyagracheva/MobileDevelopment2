@@ -229,3 +229,109 @@
 
 *RingStore*
 ------
+
+Для каждого экрана, который используется в приложении был создан свой фрагмент. В данном приложении пристутсвует:
+AuthFragment - фрагмент для аутентификации
+RegisterFragment - фрагмент для регистрации
+UserInfoFragment - фрагмент профиля
+RingListFragment - фрагмент со списком колец
+MetalPriceFragment - фрагмент со списком драгоценных металлов
+
+Для реализации фрагментной навигации в приложении был создан файл nav_graph.xml. В нем указывается начальный фрагмент, с которого запускается приложение. В данном случае - это фрагмент authFragment.
+Также для каждого фрагмента здесь указывается action, который вызывается при нажатии на кнопку. Данный action нужен для перехода из одного фрагмента в другой. При этом учитывается бэк-стек.
+
+    <navigation
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/nav_graph"
+        app:startDestination="@id/authFragment">
+    
+        <fragment
+            android:id="@+id/authFragment"
+            android:name="ru.mirea.gracheva.ringstore.presentation.AuthFragment"
+            android:label="Auth">
+            <action
+                android:id="@+id/action_authFragment_to_registerFragment"
+                app:destination="@id/registerFragment" />
+            <action
+                android:id="@+id/action_authFragment_to_userInfoFragment"
+                app:destination="@id/userInfoFragment" />
+        </fragment>
+    
+    
+        <fragment
+            android:id="@+id/registerFragment"
+            android:name="ru.mirea.gracheva.ringstore.presentation.RegisterFragment"
+            android:label="Register">
+            <action
+                android:id="@+id/action_registerFragment_to_authFragment"
+                app:destination="@id/authFragment" />
+        </fragment>
+    
+        <fragment
+            android:id="@+id/userInfoFragment"
+            android:name="ru.mirea.gracheva.ringstore.presentation.UserInfoFragment"
+            android:label="UserInfo">
+            <action
+                android:id="@+id/action_userInfoFragment_to_metalPriceFragment"
+                app:destination="@id/metalPriceFragment" />
+            <action
+                android:id="@+id/action_userInfoFragment_to_authFragment"
+                app:destination="@id/authFragment" />
+            <action
+                android:id="@+id/action_userInfoFragment_to_ringListFragment"
+                app:destination="@id/ringListFragment" />
+        </fragment>
+    
+        <fragment
+            android:id="@+id/metalPriceFragment"
+            android:name="ru.mirea.gracheva.ringstore.presentation.MetalPriceFragment"
+            android:label="MetalPrice">
+            <action
+                android:id="@+id/action_metalPriceFragment_to_userInfoFragment"
+                app:destination="@id/userInfoFragment" />
+        </fragment>
+    
+        <fragment
+            android:id="@+id/ringListFragment"
+            android:name="ru.mirea.gracheva.ringstore.presentation.RingListFragment"
+            android:label="RingList">
+            <action
+                android:id="@+id/action_ringListFragment_to_userInfoFragment"
+                app:destination="@id/userInfoFragment" />
+        </fragment>
+    
+    </navigation>
+
+В каждом фрагменте есть кнопки для перехода из одного фрагмента в другой. Выглядят они примерно так:
+
+    binding.goToMetalsButton.setOnClickListener(v -> {
+                navController.navigate(R.id.action_userInfoFragment_to_metalPriceFragment);
+            });
+    
+            binding.goToRingsButton.setOnClickListener(v -> {
+                navController.navigate(R.id.action_userInfoFragment_to_ringListFragment);
+            });
+    
+            vm.ifSuccess().observe(getViewLifecycleOwner(), success ->{
+                if (success){
+                    Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
+                    navController.navigate(R.id.action_userInfoFragment_to_authFragment);
+                }
+            });
+Здесь представлены 2 варианта. Один вариант обычный, второй работает при использовании во ViewModel LiveData.
+
+В результате структура приложения выглядит вот так:
+
+<img width="379" height="831" alt="image" src="https://github.com/user-attachments/assets/e5800595-a615-42d4-830a-8c03369a406f" />
+<img width="355" height="799" alt="image" src="https://github.com/user-attachments/assets/4bbd3124-a097-4e70-97e5-e8a5571bfd1b" />
+<img width="361" height="796" alt="image" src="https://github.com/user-attachments/assets/0901c569-975f-4cf0-afbd-9ee4f23d09ec" />
+<img width="356" height="793" alt="image" src="https://github.com/user-attachments/assets/f69cc035-3de2-442e-b105-f6fe1862c240" />
+<img width="359" height="792" alt="image" src="https://github.com/user-attachments/assets/10a3fa5a-46c0-40a4-a9e1-992b7252f238" />
+<img width="360" height="796" alt="image" src="https://github.com/user-attachments/assets/9c14fc3f-42ce-4cde-9e12-7911b5bd81c3" />
+<img width="356" height="783" alt="image" src="https://github.com/user-attachments/assets/b651a19b-4549-44ea-8e50-b7de2ade9944" />
+
+
+
+
+
