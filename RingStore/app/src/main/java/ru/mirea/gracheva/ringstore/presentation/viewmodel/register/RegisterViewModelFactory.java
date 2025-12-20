@@ -17,17 +17,12 @@ import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModel;
 
 public class RegisterViewModelFactory implements ViewModelProvider.Factory {
-    private Context context;
-    public RegisterViewModelFactory(Context context){
-        this.context = context;
-    }
+
     @NonNull
     @Override
     public <T extends ViewModel> T create(@NonNull Class<T> modelClass){
         AuthDataSource authDataSource = new FireBaseAuthDataSource();
-        UserRoleDataSource userRoleDataSource = new SharedPreferencesUserRoleDataSource(context);
         AuthRepository authRepository = new AuthRepositoryImpl(authDataSource);
-        UserRoleRepository userRoleRepository = new UserRoleRepositoryImpl(userRoleDataSource);
-        return (T) new AuthViewModel(authRepository, userRoleRepository);
+        return (T) new RegisterViewModel(authRepository);
     }
 }
