@@ -77,3 +77,111 @@
 <img width="382" height="846" alt="image" src="https://github.com/user-attachments/assets/09726179-496e-4574-ad20-1866cab38098" />
 <img width="396" height="840" alt="image" src="https://github.com/user-attachments/assets/819735ec-88a0-4a68-91ca-651642877913" />
 
+*NavigationDrawerApp*
+-----
+
+Далее была реализована навигация при помощи Navigation Drawer, когда элементы меню появляются при нажатии на ьургер-меню.
+
+Для этого нужно было также создать два файла: граф навигации, чтобы прописать, какие фрагменты нужно добавить в меню, и файл меню, где описываются какие кнопки отвечают за открытие каждого фрагмента.
+Далее был создан файл для описания основного контента. Это нужно, чтобы drawer разворачивал нужный фрагмент при нажатии на определенную кнопку меню. (content_main.xml)
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nav_host_fragment_content_main"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:defaultNavHost="true"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navGraph="@navigation/nav_graph" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+Далее были прописаны настройки самой вкладки меня в отдельном файле (app_bar_main.xml). Здесь были указаны стили для панели с кнопкой бургер-меню и для панели самого меню.
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".MainActivity">
+        
+            <com.google.android.material.appbar.AppBarLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:theme="@style/Theme.Navigation.AppBarOverlay">
+        
+                <androidx.appcompat.widget.Toolbar
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    app:popupTheme="@style/Theme.Navigation.PopupOverlay" />
+        
+            </com.google.android.material.appbar.AppBarLayout>
+        
+            <include layout="@layout/content_main" />
+        
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+Стили были подключены в  файле res/values/styles.xml
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <resources>
+            <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+                <item name="colorPrimary">@color/purple_500</item>
+                <item name="colorPrimaryVariant">@color/purple_700</item>
+                <item name="colorOnPrimary">@color/white</item>
+            </style>
+        
+            <style name="Theme.Navigation.AppBarOverlay"
+                parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+            <style name="Theme.Navigation.PopupOverlay"
+                parent="ThemeOverlay.AppCompat.Light" />
+        </resources>
+
+Затем был настроен файл nav_header_main.xml, в котором была настроена шапка меню.
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="176dp"
+            android:background="@color/purple_500"
+            android:gravity="bottom"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:theme="@style/ThemeOverlay.AppCompat.Dark">
+        
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@android:drawable/sym_def_app_icon"
+                android:contentDescription="Logo" />
+        
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:text="Ваш аккаунт"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+        
+        </LinearLayout>
+
+Таким образом, получилось вот такое приложение:
+
+<img width="322" height="703" alt="image" src="https://github.com/user-attachments/assets/1ac04ecf-af85-48d6-aa5a-542fce751b99" />
+<img width="321" height="710" alt="image" src="https://github.com/user-attachments/assets/0823a931-735b-4e91-9a3c-5b3ac00e124b" />
+<img width="322" height="708" alt="image" src="https://github.com/user-attachments/assets/6cf00854-e99f-4c67-ab61-d1bb0062dcfc" />
+<img width="312" height="706" alt="image" src="https://github.com/user-attachments/assets/40b53deb-3efb-4d26-abbc-cce852f101c8" />
+
+*RingStore*
+-----
+
