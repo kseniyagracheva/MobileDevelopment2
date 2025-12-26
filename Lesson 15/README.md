@@ -184,4 +184,174 @@
 
 *RingStore*
 -----
+Далее навигация была добавлена в проект. Для этого в gradle файл были добавлены новый зависимости. 
+
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
+
+После была добалвена навигационная панель снизу
+Для этого были созданы 2 графа навигации. Один для фрагмента с авторизацией, 
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/nav_graph_auth"
+            app:startDestination="@id/authFragment">
+        
+            <fragment android:id="@+id/authFragment"
+                android:name="ru.mirea.gracheva.ringstore.presentation.AuthFragment">
+                <action android:id="@+id/action_authFragment_to_registerFragment"
+                    app:destination="@id/registerFragment" />
+                <action android:id="@+id/action_authFragment_to_userInfoFragment"
+                    app:destination="@id/userInfoFragment" />
+            </fragment>
+        
+            <fragment android:id="@+id/registerFragment"
+                android:name="ru.mirea.gracheva.ringstore.presentation.RegisterFragment">
+                <action android:id="@+id/action_registerFragment_to_authFragment"
+                    app:destination="@id/authFragment" />
+            </fragment>
+        </navigation>
+
+второй для фрагментов для авторизованного пользователя.
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <navigation xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/nav_graph_main"
+            app:startDestination="@id/userInfoFragment">
+        
+            <fragment android:id="@+id/userInfoFragment"
+                android:name="ru.mirea.gracheva.ringstore.presentation.UserInfoFragment">
+                <action android:id="@+id/action_userInfoFragment_to_metalPriceFragment"
+                    app:destination="@id/metalPriceFragment" />
+                <action android:id="@+id/action_userInfoFragment_to_ringListFragment"
+                    app:destination="@id/ringListFragment" />
+            </fragment>
+        
+            <fragment android:id="@+id/metalPriceFragment"
+                android:name="ru.mirea.gracheva.ringstore.presentation.MetalPriceFragment">
+                <action android:id="@+id/action_metalPriceFragment_to_userInfoFragment"
+                    app:destination="@id/userInfoFragment" />
+            </fragment>
+        
+            <fragment android:id="@+id/ringListFragment"
+                android:name="ru.mirea.gracheva.ringstore.presentation.RingListFragment">
+                <action android:id="@+id/action_ringListFragment_to_userInfoFragment"
+                    app:destination="@id/userInfoFragment" />
+            </fragment>
+        </navigation>
+
+После этого был создан файл menu.xml
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <menu xmlns:android="http://schemas.android.com/apk/res/android">
+        
+            <item
+                android:id="@+id/ringListFragment"
+                android:icon="@raw/ring"
+                android:title="Каталог" />
+            <item
+                android:id="@+id/userInfoFragment"
+                android:icon="@raw/lk"
+                android:title="Профиль" />
+            <item
+                android:id="@+id/metalPriceFragment"
+                android:icon="@raw/metal"
+                android:title="Цены на металлы" />
+        
+        </menu>
+
+Затем были внесены изменения в activity_main.xml
+
+        <?xml version="1.0" encoding="utf-8"?>
+        <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:id="@+id/main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            tools:context=".presentation.MainActivity">
+        
+            <com.google.android.material.bottomnavigation.BottomNavigationView
+                android:id="@+id/nav_view"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:background="?android:attr/windowBackground"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:menu="@menu/menu" />
+        
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/nav_host_fragment_activity_main"
+                android:name="androidx.navigation.fragment.NavHostFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                app:defaultNavHost="true"
+                app:layout_constraintBottom_toTopOf="@id/nav_view"
+                app:layout_constraintTop_toTopOf="parent"
+                app:navGraph="@navigation/nav_graph_auth" />
+        
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+Потом были внесены изменения в MainActivity, чтобы она запускала навигацию для авторизованного пользователя
+
+        public class MainActivity extends AppCompatActivity {
+            private ActivityMainBinding binding;  // ViewBinding
+            private NavController navController;
+            private BottomNavigationView navView;
+        
+            @Override
+            protected void onCreate(Bundle savedInstanceState) {
+                super.onCreate(savedInstanceState);
+                binding = ActivityMainBinding.inflate(getLayoutInflater());
+                setContentView(binding.getRoot());
+        
+                navView = binding.navView;
+        
+                NavHostFragment navHostFragment = (NavHostFragment)
+                        getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
+                navController = navHostFragment.getNavController();
+        
+                if (isUserLoggedIn()) {
+                    showMainGraph();
+                } else {
+                    showAuthGraph();
+                }
+            }
+        
+            private void showAuthGraph() {
+                navView.setVisibility(View.GONE);
+                navController.setGraph(R.navigation.nav_graph_auth);
+            }
+        
+            private void showMainGraph() {
+                navView.setVisibility(View.VISIBLE);
+                navController.setGraph(R.navigation.nav_graph_main);
+        
+                navView.setOnNavigationItemSelectedListener(item -> {
+                    navController.navigate(item.getItemId());
+                    return true;
+                });
+                navController.navigate(R.id.userInfoFragment, null);
+            }
+        
+            public void onLoginSuccess() {
+                showMainGraph();
+            }
+        
+            private boolean isUserLoggedIn() {
+                SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
+                return prefs.getBoolean("is_logged_in", false);
+            }
+        }
+
+Таким образом получилось добавить навигационную панель снизу:
+
+<img width="364" height="801" alt="image" src="https://github.com/user-attachments/assets/4f35f38d-1627-4bba-ae51-b50764653b2e" />
+<img width="363" height="815" alt="image" src="https://github.com/user-attachments/assets/0048b13f-a63c-4187-9267-8acda31bbe55" />
+<img width="373" height="817" alt="image" src="https://github.com/user-attachments/assets/4df327a0-180f-493e-80e2-6f32e167bb2f" />
+
+
 
