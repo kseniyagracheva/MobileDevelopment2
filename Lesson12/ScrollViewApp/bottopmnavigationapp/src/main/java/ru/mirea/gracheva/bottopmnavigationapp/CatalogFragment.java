@@ -1,0 +1,27 @@
+package ru.mirea.gracheva.bottopmnavigationapp;
+
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+
+import ru.mirea.gracheva.bottopmnavigationapp.databinding.FragmentCatalogBinding;
+
+public class CatalogFragment extends Fragment {
+    private FragmentCatalogBinding binding;
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        binding = FragmentCatalogBinding.inflate(inflater, container, false);
+        return binding.getRoot();
+    }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        binding = null;
+    }
+}
