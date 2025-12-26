@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph_main"
+    app:startDestination="@id/userInfoFragment">
+
+    <fragment android:id="@+id/userInfoFragment"
+        android:name="ru.mirea.gracheva.ringstore.presentation.UserInfoFragment">
+        <action android:id="@+id/action_userInfoFragment_to_metalPriceFragment"
+            app:destination="@id/metalPriceFragment" />
+        <action android:id="@+id/action_userInfoFragment_to_ringListFragment"
+            app:destination="@id/ringListFragment" />
+    </fragment>
+
+    <fragment android:id="@+id/metalPriceFragment"
+        android:name="ru.mirea.gracheva.ringstore.presentation.MetalPriceFragment">
+        <action android:id="@+id/action_metalPriceFragment_to_userInfoFragment"
+            app:destination="@id/userInfoFragment" />
+    </fragment>
+
+    <fragment android:id="@+id/ringListFragment"
+        android:name="ru.mirea.gracheva.ringstore.presentation.RingListFragment">
+        <action android:id="@+id/action_ringListFragment_to_userInfoFragment"
+            app:destination="@id/userInfoFragment" />
+    </fragment>
+</navigation>

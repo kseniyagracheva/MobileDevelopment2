@@ -1,5 +1,7 @@
 package ru.mirea.gracheva.ringstore.presentation;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +49,10 @@ public class AuthFragment extends Fragment {
             bundle.putString("email", user.getEmail());
             vm.getUserRole().observe(getViewLifecycleOwner(), role -> {
                 bundle.putString("role", role.name());
-                navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
+                SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
+                prefs.edit().putBoolean("is_logged_in", true).apply();
+                ((MainActivity) requireActivity()).onLoginSuccess();
+                ///navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
             });
         });
         vm.getError().observe(getViewLifecycleOwner(), error ->{

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Стиль для PopupMenu -->
+    <style name="PopupMenu" parent="@android:style/Widget.PopupMenu">
+        <item name="android:popupBackground">#000000</item>
+        <item name="android:itemBackground">#000000</item>
+        <item name="android:textColor">#FFFFFF</item>
+    </style>
+
+    <!-- Примените к вашей теме -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="android:popupMenuStyle">@style/PopupMenu</item>
+        <!-- остальные ваши стили -->
+    </style>
+    <style name="BlackBottomNavPopup" parent="Widget.Material3.PopupMenu">
+        <item name="android:popupBackground">#000000</item>
+        <item name="android:textColor">#FFFFFF</item>
+        <item name="android:itemBackground">#111111</item>
+        <item name="iconTint">#FFFFFF</item>
+    </style>
+
+</resources>
