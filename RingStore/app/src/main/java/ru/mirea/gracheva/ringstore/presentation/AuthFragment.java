@@ -29,7 +29,7 @@ public class AuthFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vm = new ViewModelProvider(this, new AuthViewModelFactory(requireContext())).get(AuthViewModel.class);
+        vm = new ViewModelProvider(this, new AuthViewModelFactory()).get(AuthViewModel.class);
     }
 
     @Override
@@ -45,15 +45,7 @@ public class AuthFragment extends Fragment {
 
         vm.getUser().observe(getViewLifecycleOwner(), user ->{
             Toast.makeText(requireContext(), "Добро пожаловать " + user.getEmail(), Toast.LENGTH_SHORT).show();
-            Bundle bundle = new Bundle();
-            bundle.putString("email", user.getEmail());
-            vm.getUserRole().observe(getViewLifecycleOwner(), role -> {
-                bundle.putString("role", role.name());
-                SharedPreferences prefs = requireActivity().getSharedPreferences("user_prefs", Context.MODE_PRIVATE);
-                prefs.edit().putBoolean("is_logged_in", true).apply();
-                ((MainActivity) requireActivity()).onLoginSuccess();
-                ///navController.navigate(R.id.action_authFragment_to_userInfoFragment, bundle);
-            });
+            ((MainActivity) requireActivity()).onLoginSuccess();
         });
         vm.getError().observe(getViewLifecycleOwner(), error ->{
             Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
@@ -75,7 +67,9 @@ public class AuthFragment extends Fragment {
 
             vm.login(email,password);
         });
+
         binding.guestButton.setOnClickListener(v -> vm.loginAsGuest());
+
         binding.registerButton.setOnClickListener(v -> navController.navigate(R.id.action_authFragment_to_registerFragment));
     }
 

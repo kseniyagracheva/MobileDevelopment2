@@ -1,18 +1,21 @@
 package ru.mirea.gracheva.data.repository;
 
 import ru.mirea.gracheva.data.DTO.UserDTO;
-import ru.mirea.gracheva.data.DTO.UserRoleDTO;
 import ru.mirea.gracheva.data.storage.auth.AuthDataSource;
 import ru.mirea.gracheva.domain.models.User;
-import ru.mirea.gracheva.domain.models.UserRole;
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
-import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
 
 public class AuthRepositoryImpl implements AuthRepository {
     private final AuthDataSource authDataSource;
 
     public AuthRepositoryImpl(AuthDataSource authDataSource) {
         this.authDataSource = authDataSource;
+    }
+
+    @Override
+    public User getCurrentUser(){
+        UserDTO userDTO = authDataSource.getCurrentUser();
+        return userDTO == null? null: mapToDomain(userDTO);
     }
 
     @Override
@@ -34,27 +37,9 @@ public class AuthRepositoryImpl implements AuthRepository {
     public void login(String email, String password, AuthCallback callback) {
         authDataSource.login(email, password, new AuthDataSource.AuthCallback() {
             @Override
-            public void onSuccess(UserDTO userDTO, UserRoleDTO userRoleDTO) {
+            public void onSuccess(UserDTO userDTO) {
                 User user = mapToDomain(userDTO);
-                UserRole userRole = UserRole.valueOf(mapRoleToDomain(userRoleDTO));
-                callback.onSuccess(user, userRole);
-            }
-
-            @Override
-            public void onError(String errorMessage) {
-                callback.onError(errorMessage);
-            }
-        });
-    }
-
-    @Override
-    public void loginAsGuest(AuthCallback callback) {
-        authDataSource.loginAsGuest(new AuthDataSource.AuthCallback() {
-            @Override
-            public void onSuccess(UserDTO userDTO, UserRoleDTO userRoleDTO) {
-                User user = mapToDomain(userDTO);
-                UserRole userRole = UserRole.valueOf(mapRoleToDomain(userRoleDTO));
-                callback.onSuccess(user, userRole);
+                callback.onSuccess(user);
             }
 
             @Override
@@ -84,9 +69,5 @@ public class AuthRepositoryImpl implements AuthRepository {
                 userDTO.getUserId(),
                 userDTO.getEmail()
         );
-    }
-
-    private String mapRoleToDomain(UserRoleDTO userRoleDTO) {
-        return userRoleDTO.getUserRoleName();
     }
 }

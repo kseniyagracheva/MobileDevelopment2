@@ -1,11 +1,10 @@
 package ru.mirea.gracheva.domain.repository.auth;
 
 import ru.mirea.gracheva.domain.models.User;
-import ru.mirea.gracheva.domain.models.UserRole;
 
 public interface AuthRepository {
     public interface AuthCallback {
-        public void onSuccess(User user, UserRole userRole);
+        public void onSuccess(User user);
         public void onError(String errorMessage);
     }
     public interface Callback {
@@ -18,9 +17,9 @@ public interface AuthRepository {
         public void onError(String errorMessage);
     }
 
+    public User getCurrentUser();
     public void register(String email, String password, RegisterCallback callback);
     public void login(String email, String password, AuthCallback callback);
-    public void loginAsGuest(AuthCallback callback);
     public void logout(Callback callback);
 
 }

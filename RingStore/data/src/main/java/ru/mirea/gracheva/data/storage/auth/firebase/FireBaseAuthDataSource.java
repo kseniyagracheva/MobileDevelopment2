@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import ru.mirea.gracheva.data.DTO.UserDTO;
-import ru.mirea.gracheva.data.DTO.UserRoleDTO;
 import ru.mirea.gracheva.data.storage.auth.AuthDataSource;
 
 public class FireBaseAuthDataSource implements AuthDataSource {
@@ -12,6 +11,15 @@ public class FireBaseAuthDataSource implements AuthDataSource {
 
     public FireBaseAuthDataSource() {
         firebaseAuth = FirebaseAuth.getInstance();
+    }
+
+    @Override
+    public UserDTO getCurrentUser(){
+        FirebaseUser fbUser = firebaseAuth.getCurrentUser();
+        if(fbUser==null){
+            return null;
+        }
+        return new UserDTO(fbUser.getUid(), fbUser.getEmail());
     }
 
     @Override
@@ -36,19 +44,12 @@ public class FireBaseAuthDataSource implements AuthDataSource {
                     if(task.isSuccessful()){
                         FirebaseUser fbUser = task.getResult().getUser();
                         UserDTO userDTO = new UserDTO(fbUser.getUid(), fbUser.getEmail());
-                        UserRoleDTO userRoleDTO = new UserRoleDTO("AUTHORIZED");
-                        callback.onSuccess(userDTO, userRoleDTO);
+
+                        callback.onSuccess(userDTO);
                     } else {
                         callback.onError(task.getException() != null ? task.getException().getMessage() : "Unknown error");
                     }
                 });
-    }
-
-    @Override
-    public void loginAsGuest(AuthCallback callback) {
-        UserDTO guestUser = new UserDTO("", "guest@example.com");
-        UserRoleDTO userRoleDTO = new UserRoleDTO("GUEST");
-        callback.onSuccess(guestUser, userRoleDTO);
     }
 
     @Override

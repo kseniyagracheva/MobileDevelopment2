@@ -1,7 +1,6 @@
 package ru.mirea.gracheva.domain.models;
 
-public enum UserRole {
+public enum AuthState {
     GUEST,
     AUTHORIZED
 }
-

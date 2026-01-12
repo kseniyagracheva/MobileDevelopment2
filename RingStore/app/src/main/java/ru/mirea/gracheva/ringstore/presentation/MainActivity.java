@@ -12,17 +12,27 @@ import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
+import ru.mirea.gracheva.data.repository.AuthRepositoryImpl;
+import ru.mirea.gracheva.data.storage.auth.firebase.FireBaseAuthDataSource;
+import ru.mirea.gracheva.domain.models.User;
+import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
+import ru.mirea.gracheva.domain.usecases.authentification.user.GetCurrentUserUseCase;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.ActivityMainBinding;
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;  // ViewBinding
+
+    private ActivityMainBinding binding;
     private NavController navController;
     private BottomNavigationView navView;
+
+    private AuthRepository authRepository;
+    private GetCurrentUserUseCase getCurrentUserUseCase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         binding = ActivityMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
@@ -32,7 +42,14 @@ public class MainActivity extends AppCompatActivity {
                 getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment_activity_main);
         navController = navHostFragment.getNavController();
 
-        if (isUserLoggedIn()) {
+        // 🔹 Инициализация репозитория и UseCase
+        authRepository = new AuthRepositoryImpl(new FireBaseAuthDataSource());
+        getCurrentUserUseCase = new GetCurrentUserUseCase(authRepository);
+
+        // 🔹 Проверка текущего пользователя через UseCase
+        User currentUser = getCurrentUserUseCase.execute();
+
+        if (currentUser != null) {
             showMainGraph();
         } else {
             showAuthGraph();
@@ -52,16 +69,15 @@ public class MainActivity extends AppCompatActivity {
             navController.navigate(item.getItemId());
             return true;
         });
+
+        // Автопереход на UserInfoFragment
         navController.navigate(R.id.userInfoFragment, null);
     }
 
+    // Вызывается после успешного логина или гостевого входа
     public void onLoginSuccess() {
         showMainGraph();
     }
-
-    private boolean isUserLoggedIn() {
-        SharedPreferences prefs = getSharedPreferences("user_prefs", MODE_PRIVATE);
-        return prefs.getBoolean("is_logged_in", false);
-    }
 }
+
 

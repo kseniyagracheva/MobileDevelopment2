@@ -14,7 +14,6 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
-import ru.mirea.gracheva.domain.repository.auth.UserRoleRepository;
 import ru.mirea.gracheva.domain.usecases.authentification.auth.LogOutUseCase;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentUserInfoBinding;
@@ -25,9 +24,7 @@ public class UserInfoFragment extends Fragment {
     private FragmentUserInfoBinding binding;
     private NavController navController;
 
-    private LogOutUseCase logOutUseCase;
-
-    private UserRoleRepository userRoleRepository;
+    //private LogOutUseCase logOutUseCase;
     private AuthRepository authRepository;
 
     private UserInfoViewModel vm;
@@ -35,10 +32,7 @@ public class UserInfoFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        vm = new ViewModelProvider(this, new UserInfoViewModelFactory(requireContext())).get(UserInfoViewModel.class);
-
-
-        logOutUseCase = new LogOutUseCase(authRepository);
+        vm = new ViewModelProvider(this, new UserInfoViewModelFactory()).get(UserInfoViewModel.class);
     }
 
     @Override
@@ -53,19 +47,15 @@ public class UserInfoFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
-        vm.getUserRole().observe(getViewLifecycleOwner(), currentRole -> {
-            Bundle args = getArguments();
-            if (args != null) {
-                String email = args.getString("email", "");
-                String role = args.getString("role", "");
-                binding.emailText.setText(email.isEmpty() ? "Гость" : email);
-                binding.roleText.setText("Роль: " + role);
-            }else {
-                binding.roleText.setText("Роль: " + (currentRole != null ? currentRole.name(): "Гость"));
+        vm.getUser().observe(getViewLifecycleOwner(), user -> {
+            if(user==null){
+                navController.navigate(R.id.action_userInfoFragment_to_authFragment);
+            }
+            else {
+                binding.emailText.setText(user.getEmail() != null ? user.getEmail() : "Гость");
             }
         });
 
-        vm.loadUserRole();
 
         binding.goToMetalsButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_userInfoFragment_to_metalPriceFragment);
@@ -75,18 +65,11 @@ public class UserInfoFragment extends Fragment {
             navController.navigate(R.id.action_userInfoFragment_to_ringListFragment);
         });
 
-        vm.ifSuccess().observe(getViewLifecycleOwner(), success ->{
-            if (success){
-                Toast.makeText(requireContext(), "Вы вышли из аккаунта", Toast.LENGTH_SHORT).show();
-                navController.navigate(R.id.action_userInfoFragment_to_authFragment);
-            }
-        });
-        vm.getError().observe(getViewLifecycleOwner(), error ->{
-            Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
-        });
         binding.logOutButton.setOnClickListener(v -> {
             vm.logout();
         });
+
+        vm.loadUser();
     }
 
     @Override
