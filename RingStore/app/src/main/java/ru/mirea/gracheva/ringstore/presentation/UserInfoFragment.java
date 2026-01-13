@@ -13,6 +13,8 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
 import ru.mirea.gracheva.domain.usecases.authentification.auth.LogOutUseCase;
 import ru.mirea.gracheva.ringstore.R;
@@ -44,17 +46,13 @@ public class UserInfoFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         navController = Navigation.findNavController(view);
-
 
         vm.getUser().observe(getViewLifecycleOwner(), user -> {
             binding.emailText.setText(user.getEmail() != null ? user.getEmail() : "Гость");
         });
 
-        binding.logOutButton.setOnClickListener(v -> {
-            vm.logout();
-        });
+        binding.logOutButton.setOnClickListener(v -> showLogoutConfirmationDialog());
 
         vm.loadUser();
     }
@@ -63,5 +61,17 @@ public class UserInfoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void showLogoutConfirmationDialog() {
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Выход из аккаунта")
+                .setMessage("Вы действительно хотите выйти из аккаунта?")
+                .setPositiveButton("Да, выйти", (dialog, which) -> {
+                    navController.navigate(R.id.action_userInfoFragment_to_ringListFragment);
+                    vm.logout();
+                })
+                .setNegativeButton("Отмена", null)
+                .show();
     }
 }

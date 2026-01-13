@@ -13,12 +13,17 @@ public class UserInfoViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final MutableLiveData<User> userLiveData = new MutableLiveData<>();
 
+    private final MutableLiveData<Boolean> logoutSuccess = new MutableLiveData<>();
+
     public UserInfoViewModel(AuthRepository authRepository) {
         this.authRepository = authRepository;
     }
 
     public LiveData<User> getUser() {
         return userLiveData;
+    }
+    public LiveData<Boolean> getLogoutResult(){
+        return logoutSuccess;
     }
 
     public void loadUser() {
@@ -30,10 +35,13 @@ public class UserInfoViewModel extends ViewModel {
             @Override
             public void onSuccess() {
                 userLiveData.postValue(null);
+                logoutSuccess.postValue(true);
             }
 
             @Override
-            public void onError(String errorMessage) {}
+            public void onError(String errorMessage) {
+                logoutSuccess.postValue(false);
+            }
         });
     }
 }

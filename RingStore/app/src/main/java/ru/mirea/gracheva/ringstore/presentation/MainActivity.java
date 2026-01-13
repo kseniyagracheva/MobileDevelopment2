@@ -93,11 +93,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
     }
-
-    // Вызывается после успешного логина или гостевого входа
-    /*public void onLoginSuccess() {
-        showMainGraph();
-    }*/
 }
 
 
