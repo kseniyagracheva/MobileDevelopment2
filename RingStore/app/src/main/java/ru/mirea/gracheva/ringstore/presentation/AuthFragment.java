@@ -45,7 +45,7 @@ public class AuthFragment extends Fragment {
 
         vm.getUser().observe(getViewLifecycleOwner(), user ->{
             Toast.makeText(requireContext(), "Добро пожаловать " + user.getEmail(), Toast.LENGTH_SHORT).show();
-            ((MainActivity) requireActivity()).onLoginSuccess();
+            //((MainActivity) requireActivity()).onLoginSuccess();
         });
         vm.getError().observe(getViewLifecycleOwner(), error ->{
             Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
@@ -66,9 +66,10 @@ public class AuthFragment extends Fragment {
             }
 
             vm.login(email,password);
+            navController.navigate(R.id.action_authFragment_to_userInfoFragment);
         });
 
-        binding.guestButton.setOnClickListener(v -> vm.loginAsGuest());
+        binding.guestButton.setOnClickListener(v -> navController.popBackStack());
 
         binding.registerButton.setOnClickListener(v -> navController.navigate(R.id.action_authFragment_to_registerFragment));
     }

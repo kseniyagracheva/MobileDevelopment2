@@ -52,8 +52,7 @@ public class RingListFragment extends Fragment {
 
         vm.getRings();
 
-        binding.backToUserInfoButton.setOnClickListener(v ->
-                navController.navigate(R.id.action_ringListFragment_to_userInfoFragment));
+
     }
 
     @Override

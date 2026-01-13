@@ -47,22 +47,9 @@ public class UserInfoFragment extends Fragment {
 
         navController = Navigation.findNavController(view);
 
+
         vm.getUser().observe(getViewLifecycleOwner(), user -> {
-            if(user==null){
-                navController.navigate(R.id.action_userInfoFragment_to_authFragment);
-            }
-            else {
-                binding.emailText.setText(user.getEmail() != null ? user.getEmail() : "Гость");
-            }
-        });
-
-
-        binding.goToMetalsButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_userInfoFragment_to_metalPriceFragment);
-        });
-
-        binding.goToRingsButton.setOnClickListener(v -> {
-            navController.navigate(R.id.action_userInfoFragment_to_ringListFragment);
+            binding.emailText.setText(user.getEmail() != null ? user.getEmail() : "Гость");
         });
 
         binding.logOutButton.setOnClickListener(v -> {

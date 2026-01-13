@@ -6,12 +6,16 @@
         android:icon="@raw/ring"
         android:title="Каталог" />
     <item
-        android:id="@+id/userInfoFragment"
-        android:icon="@raw/lk"
-        android:title="Профиль" />
-    <item
         android:id="@+id/metalPriceFragment"
         android:icon="@raw/metal"
         android:title="Цены на металлы" />
+    <item
+        android:id="@+id/favorietsFragment"
+        android:icon="@raw/save"
+        android:title="Избранное" />
+    <item
+        android:id="@+id/userInfoFragment"
+        android:icon="@raw/lk"
+        android:title="Профиль" />
 
 </menu>

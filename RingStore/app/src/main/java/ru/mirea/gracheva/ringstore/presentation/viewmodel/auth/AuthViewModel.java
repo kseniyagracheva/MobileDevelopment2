@@ -39,10 +39,4 @@ public class AuthViewModel extends ViewModel {
         });
 
     }
-
-    public void loginAsGuest(){
-        // просто создаём гостя и пушим в LiveData
-        User guest = new User("", "guest@example.com");
-        userLiveData.postValue(guest);
-    }
 }

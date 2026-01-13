@@ -61,8 +61,6 @@ public class MetalPriceFragment extends Fragment {
 
         vm.fetch();
 
-        binding.backButton.setOnClickListener(v ->
-                navController.navigate(R.id.action_metalPriceFragment_to_userInfoFragment));
     }
 
     @Override
