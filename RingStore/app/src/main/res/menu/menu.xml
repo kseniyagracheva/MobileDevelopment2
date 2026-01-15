@@ -10,7 +10,7 @@
         android:icon="@raw/metal"
         android:title="Цены на металлы" />
     <item
-        android:id="@+id/favorietsFragment"
+        android:id="@+id/favoritesFragment"
         android:icon="@raw/save"
         android:title="Избранное" />
     <item

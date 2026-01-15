@@ -1,14 +1,52 @@
-<?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".presentation.FavoritesFragment">
+    android:background="#000000"
+    android:gravity="clip_vertical"
+    android:orientation="vertical"
+    android:padding="16dp">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <TableRow
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="277dp"
+        android:gravity="center_horizontal">
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/headerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Избранное"
+            android:textColor="#FFFFFF"
+            android:textSize="34sp"
+            tools:text="Избранное" />
+    </TableRow>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="104dp"
+        android:gravity="center|center_horizontal|center_vertical">
+
+        <TextView
+            android:id="@+id/guestText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:gravity="clip_horizontal|center_horizontal|center_vertical"
+            android:textSize="24sp" />
+    </TableRow>
+
+    <Button
+        android:id="@+id/loginButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#444444"
+        android:text="Войти"
+        android:textColor="#FFFFFF" />
+
+
+
+
+
+</LinearLayout>

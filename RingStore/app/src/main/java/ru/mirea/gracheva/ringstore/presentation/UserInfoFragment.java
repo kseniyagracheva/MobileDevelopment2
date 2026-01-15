@@ -15,6 +15,7 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
+import ru.mirea.gracheva.domain.models.User;
 import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
 import ru.mirea.gracheva.domain.usecases.authentification.auth.LogOutUseCase;
 import ru.mirea.gracheva.ringstore.R;
@@ -25,9 +26,6 @@ import ru.mirea.gracheva.ringstore.presentation.viewmodel.userInfo.UserInfoViewM
 public class UserInfoFragment extends Fragment {
     private FragmentUserInfoBinding binding;
     private NavController navController;
-
-    //private LogOutUseCase logOutUseCase;
-    private AuthRepository authRepository;
 
     private UserInfoViewModel vm;
 
@@ -41,6 +39,8 @@ public class UserInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserInfoBinding.inflate(inflater, container, false);
         return binding.getRoot();
+
+
     }
 
     @Override
@@ -48,12 +48,7 @@ public class UserInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
-        vm.getUser().observe(getViewLifecycleOwner(), user -> {
-            binding.emailText.setText(user.getEmail() != null ? user.getEmail() : "Гость");
-        });
-
-        binding.logOutButton.setOnClickListener(v -> showLogoutConfirmationDialog());
-
+        vm.getUser().observe(getViewLifecycleOwner(), this::updateUIForUser);
         vm.loadUser();
     }
 
@@ -68,10 +63,37 @@ public class UserInfoFragment extends Fragment {
                 .setTitle("Выход из аккаунта")
                 .setMessage("Вы действительно хотите выйти из аккаунта?")
                 .setPositiveButton("Да, выйти", (dialog, which) -> {
-                    navController.navigate(R.id.action_userInfoFragment_to_ringListFragment);
+                    setupGuestProfile();
                     vm.logout();
                 })
                 .setNegativeButton("Отмена", null)
                 .show();
+    }
+
+    private void updateUIForUser(User user){
+        if (user == null){ //Гость
+            setupGuestProfile();
+        } else{ //Авторизованный
+            setupAuthorizedProfile(user);
+        }
+
+    }
+
+    private void setupGuestProfile(){
+        binding.emailText.setText("Гость");
+        binding.logOutButton.setVisibility(View.GONE);
+        binding.editProfileButton.setVisibility(View.GONE);
+        binding.loginButton.setVisibility(View.VISIBLE);
+        binding.loginButton.setOnClickListener(v -> {
+            navController.navigate(R.id.action_userInfoFragment_to_authFragment);
+        });
+    }
+
+    private void setupAuthorizedProfile(User user){
+        binding.emailText.setText(user.getEmail());
+        binding.logOutButton.setVisibility(View.VISIBLE);
+        binding.logOutButton.setOnClickListener(v -> showLogoutConfirmationDialog());
+        binding.editProfileButton.setVisibility(View.VISIBLE);
+        binding.loginButton.setVisibility(View.GONE);
     }
 }

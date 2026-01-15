@@ -1,22 +1,40 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="#000000"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
     android:padding="16dp">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#000000"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <Button
+            android:id="@+id/sortingButton"
+            android:layout_width="51dp"
+            android:layout_height="match_parent"
+            android:backgroundTint="#444444"
+            android:textColor="#FFFFFF"
+            app:icon="@raw/filter" />
+
+        <TextView
+            android:layout_width="312dp"
+            android:layout_height="wrap_content"
+            android:text="Каталог"
+            android:textAlignment="center"
+            android:textSize="34sp" />
+    </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/ringsRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"/>
+        android:layout_weight="1" />
 
-    <Button
-        android:id="@+id/backToUserInfoButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Вернуться"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#444444"
-        android:layout_marginTop="8dp"/>
+
 </LinearLayout>

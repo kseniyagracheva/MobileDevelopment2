@@ -11,13 +11,4 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
 
-
-    <Button
-        android:id="@+id/backButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Назад"
-        android:textColor="#FFFFFF"
-        android:backgroundTint="#444444"
-        android:layout_marginTop="24dp"/>
 </LinearLayout>

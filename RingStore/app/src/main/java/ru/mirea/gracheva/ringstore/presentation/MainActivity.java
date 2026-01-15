@@ -61,25 +61,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean onNavItemSelected(MenuItem item){
-        if (getCurrentUserUseCase.execute() == null && isRestrictedItem(item.getItemId())) {
-            handleGuestNavigation(item.getItemId());
-            return true;
-        }
         navController.navigate(item.getItemId());
         return true;
-    }
-
-    private boolean isRestrictedItem(int itemId){
-        return itemId == R.id.favorietsFragment || itemId == R.id.userInfoFragment;
-    }
-
-    private void handleGuestNavigation(int itemId){
-        if (itemId == R.id.favorietsFragment){
-            navController.navigate(R.id.authFragment);
-        }
-        else if (itemId == R.id.userInfoFragment){
-            navController.navigate(R.id.authFragment);
-        }
     }
 
     private void setupBottomNavVis() {

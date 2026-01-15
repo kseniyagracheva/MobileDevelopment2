@@ -11,6 +11,8 @@
             app:destination="@id/ringListFragment"
             app:popUpTo="@id/userInfoFragment"
             app:popUpToInclusive="true"/>
+        <action android:id="@+id/action_userInfoFragment_to_authFragment"
+            app:destination="@+id/authFragment"/>
     </fragment>
     <!--Цены на металлы-->
     <fragment android:id="@+id/metalPriceFragment"
@@ -23,6 +25,8 @@
     <!--Избранное-->
     <fragment android:id="@+id/favoritesFragment"
         android:name="ru.mirea.gracheva.ringstore.presentation.FavoritesFragment">
+        <action android:id="@+id/action_favoritesFragment_to_authFragment"
+            app:destination="@+id/authFragment"/>
     </fragment>
     <!--Авторизация-->
     <fragment android:id="@+id/authFragment"
