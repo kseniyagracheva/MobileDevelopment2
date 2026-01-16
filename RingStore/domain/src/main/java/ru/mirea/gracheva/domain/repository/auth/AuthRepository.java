@@ -17,7 +17,7 @@ public interface AuthRepository {
         public void onError(String errorMessage);
     }
 
-    public User getCurrentUser();
+    public void getCurrentUser(AuthCallback callback);
     public void register(String email, String password, RegisterCallback callback);
     public void login(String email, String password, AuthCallback callback);
     public void logout(Callback callback);

@@ -48,7 +48,6 @@ dependencies {
     implementation(project(":data"))
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
-    implementation(libs.firebase.auth)
     implementation(libs.navigation.runtime)
     implementation("androidx.navigation:navigation-fragment:2.9.5")
     implementation("androidx.navigation:navigation-ui:2.9.5")

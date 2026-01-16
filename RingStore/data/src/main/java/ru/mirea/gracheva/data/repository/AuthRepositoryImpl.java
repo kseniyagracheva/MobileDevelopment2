@@ -13,9 +13,18 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
-    public User getCurrentUser(){
-        UserDTO userDTO = authDataSource.getCurrentUser();
-        return userDTO == null? null: mapToDomain(userDTO);
+    public void getCurrentUser(AuthCallback callback){
+        authDataSource.getCurrentUser(new AuthDataSource.AuthCallback(){
+            @Override
+            public void onSuccess(UserDTO userDTO){
+                User user = mapToDomain(userDTO);
+            }
+
+            @Override
+            public void onError(String error){
+                callback.onError(error);
+            }
+        });
     }
 
     @Override
@@ -67,7 +76,9 @@ public class AuthRepositoryImpl implements AuthRepository {
     private User mapToDomain(UserDTO userDTO) {
         return new User(
                 userDTO.getUserId(),
-                userDTO.getEmail()
+                userDTO.getEmail(),
+                userDTO.getName(),
+                userDTO.getSurname()
         );
     }
 }
