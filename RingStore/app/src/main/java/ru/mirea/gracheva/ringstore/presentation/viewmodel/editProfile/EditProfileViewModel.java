@@ -16,9 +16,8 @@ public class EditProfileViewModel extends ViewModel {
     public LiveData<UserUI> getUser(){
         return userLiveData;
     }
-    public LiveData<String> getError(){
-        return errorLiveData;
-    }
+    public LiveData<String> getError(){ return errorLiveData; }
+    public void clearError() { errorLiveData.setValue(null); }
     public LiveData<Boolean> getLoading(){
         return loadingLiveData;
     }
@@ -51,6 +50,7 @@ public class EditProfileViewModel extends ViewModel {
             authRepository.editUserProfile(currentUser.getUserId(), name, surname, new AuthRepository.AuthCallback() {
                 @Override
                 public void onSuccess(User user) {
+                    loadCurrentUser();
                     userLiveData.setValue(mapToUI(user));
                     loadingLiveData.setValue(false);
                 }

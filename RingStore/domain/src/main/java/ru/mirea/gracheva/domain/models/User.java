@@ -20,10 +20,4 @@ public class User {
     public String getName() {return name;}
     public String getSurname(){return surname;}
 
-//    @Override
-//    public String toString() {
-//        return "User{" +
-//                "uid='" + userId + '\'' +
-//                ", email='" + email + '\'';
-//    }
 }

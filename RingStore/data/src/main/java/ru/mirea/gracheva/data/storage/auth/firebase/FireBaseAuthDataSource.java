@@ -1,5 +1,7 @@
 package ru.mirea.gracheva.data.storage.auth.firebase;
 
+import android.util.Log;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -56,7 +58,18 @@ public class FireBaseAuthDataSource implements AuthDataSource {
             callback.onError("Пользователь вошел как гость");
             return;
         }
-        callback.onSuccess(new UserDTO(fbUser.getUid(), fbUser.getEmail(), "", ""));
+
+        firestore.collection("users").document(fbUser.getUid())
+                .get()
+                .addOnSuccessListener(doc -> {
+                    String name = doc.getString("name") != null ? doc.getString("name") : "";
+                    String surname = doc.getString("surname") != null ? doc.getString("surname") : "";
+                    callback.onSuccess(new UserDTO(fbUser.getUid(), fbUser.getEmail(), name, surname));
+                })
+                .addOnFailureListener(e ->{
+                    Log.e("AuthDataSource", "getCurrentUser Firestore error: " + e.getMessage());
+                    callback.onSuccess(new UserDTO(fbUser.getUid(), fbUser.getEmail(), "", ""));
+                });
     }
 
     @Override
@@ -65,9 +78,13 @@ public class FireBaseAuthDataSource implements AuthDataSource {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         String uid = task.getResult().getUser().getUid();
-                        createUserProfile(uid, () ->
-                                callback.onSuccess());
+                        Log.d("AuthDataSource", "Auth successful, UID: " + uid);
+                        createUserProfile(uid, () -> {
+                            Log.d("AuthDataSource", "Profile created successfully for UID: " + uid);
+                            callback.onSuccess();
+                        });
                     } else {
+                        Log.e("AuthDataSource", "Auth failed: " + task.getException());
                         callback.onError(task.getException() != null
                                 ? task.getException().getMessage()
                                 : "Ошибка регистрации");
@@ -105,14 +122,21 @@ public class FireBaseAuthDataSource implements AuthDataSource {
     }
 
     private void createUserProfile(String uid, Runnable onComplete){//в аргументы передается айди пользователя для дока и колбэк, которыф будет выполнен после создания дока
-        firestore.collection("users").document(uid)
-                .set(new HashMap<String, Object>() {{//создаем/перезаписываем док. HashMap<String, Object>() - данные ключ - значение
-                    put ("name", "");
-                    put("surname", "");
+        Log.d("AuthDataSource", "Creating profile for UID: " + uid);
 
-                }})// {{...}} создает анонимный класс, т.е. класс без имени, который существует только в контексте функции
-                .addOnSuccessListener(aVoid -> onComplete.run())
-                .addOnFailureListener(e -> onComplete.run());
+        Map<String, Object> data = new HashMap<>();
+        data.put("name", "");
+        data.put("surname", "");
+        firestore.collection("users").document(uid)
+                .set(data)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d("AuthDataSource", "Document CREATED: users/" + uid);
+                    onComplete.run();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("AuthDataSource", " Firestore ERROR: " + e.getMessage());
+                    //onComplete.run();
+                });
     }
 
     private void deleteFirebaseUser(FirebaseUser fbUser, AuthDataSource.AuthCallback callback){

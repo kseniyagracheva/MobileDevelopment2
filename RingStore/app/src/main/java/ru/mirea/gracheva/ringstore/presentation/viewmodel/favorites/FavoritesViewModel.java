@@ -10,6 +10,7 @@ import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
 public class FavoritesViewModel extends ViewModel {
     private final AuthRepository authRepository;
     private final MutableLiveData<User> userLiveData = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> loadingLiveData = new MutableLiveData<>();
 
 
     public FavoritesViewModel(AuthRepository authRepository) {
@@ -20,19 +21,25 @@ public class FavoritesViewModel extends ViewModel {
         return userLiveData;
     }
 
-    public void loadUser() {
-        userLiveData.postValue(authRepository.getCurrentUser());
+    public LiveData<Boolean> getLoading(){
+        return loadingLiveData;
     }
 
-    public void logout() {
-        authRepository.logout(new AuthRepository.Callback() {
+    public void loadUser() {
+        loadingLiveData.setValue(true);
+        authRepository.getCurrentUser(new AuthRepository.AuthCallback() {
             @Override
-            public void onSuccess() {
-                userLiveData.postValue(null);
+            public void onSuccess(User user) {
+                userLiveData.postValue(user);
+                loadingLiveData.setValue(false);
             }
 
             @Override
-            public void onError(String errorMessage) { }
+            public void onError(String errorMessage) {
+                userLiveData.postValue(null);
+                loadingLiveData.setValue(false);
+            }
         });
     }
+
 }

@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -44,7 +45,18 @@ public class UserInfoFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
+        vm.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            binding.scrollView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        });
+
         vm.getUser().observe(getViewLifecycleOwner(), this::updateUIForUser);
+        vm.loadUser();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         vm.loadUser();
     }
 
@@ -72,7 +84,6 @@ public class UserInfoFragment extends Fragment {
         } else{ //Авторизованный
             setupAuthorizedProfile(user);
         }
-
     }
 
     private void setupGuestProfile(){
@@ -94,6 +105,9 @@ public class UserInfoFragment extends Fragment {
         binding.logOutButton.setVisibility(View.VISIBLE);
         binding.logOutButton.setOnClickListener(v -> showLogoutConfirmationDialog());
         binding.editProfileButton.setVisibility(View.VISIBLE);
+        binding.editProfileButton.setOnClickListener(v ->{
+            navController.navigate(R.id.action_userInfoFragment_to_editProfileFragment);
+        });
         binding.loginButton.setVisibility(View.GONE);
     }
 }

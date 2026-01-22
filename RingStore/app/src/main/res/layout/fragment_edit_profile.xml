@@ -1,71 +1,84 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#000000"
-    android:gravity="clip_vertical"
-    android:orientation="vertical"
-    android:padding="16dp">
+    android:background="#000000">
 
-    <TableRow
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="49dp" >
+        android:layout_height="match_parent"
+        android:layout_above="@id/deleteProfileButton"
+        android:fillViewport="true">
 
-        <Button
-            android:id="@+id/backToProfileButton"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:backgroundTint="#444444"
-            android:text="Назад" />
-    </TableRow>
+            android:orientation="vertical"
+            android:padding="16dp">
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="100dp" />
+            <TableRow android:layout_width="match_parent" android:layout_height="49dp">
+                <Button
+                    android:id="@+id/backToProfileButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:backgroundTint="#444444"
+                    android:text="Назад" />
+            </TableRow>
 
-    <TextView
-        android:id="@+id/emailText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="TextView"
-        android:textSize="20sp" />
+            <Space android:layout_width="match_parent" android:layout_height="100dp" />
 
-    <EditText
-        android:id="@+id/editNameText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Имя" />
+            <TextView
+                android:id="@+id/emailText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="TextView"
+                android:textSize="20sp" />
 
-    <EditText
-        android:id="@+id/editSurnameText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:text="Фамилия" />
+            <EditText
+                android:id="@+id/editNameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Имя"
+                android:textColor="#FFFFFF" />
 
+            <EditText
+                android:id="@+id/editSurnameText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="text"
+                android:text="Фамилия"
+                android:textColor="#FFFFFF" />
 
-    <Button
-        android:id="@+id/saveUpdateButton"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:backgroundTint="#444444"
-        android:text="Сохранить изменения"
-        android:textColor="#FFFFFF" />
+            <Button
+                android:id="@+id/saveUpdateButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:backgroundTint="#444444"
+                android:text="Сохранить изменения"
+                android:textColor="#FFFFFF" />
 
-    <Space
-        android:layout_width="match_parent"
-        android:layout_height="383dp" />
+        </LinearLayout>
+    </ScrollView>
 
     <Button
         android:id="@+id/deleteProfileButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
         android:backgroundTint="#444444"
         android:text="Удалить профиль"
         android:textColor="#FFFFFF" />
 
-</LinearLayout>
+</RelativeLayout>

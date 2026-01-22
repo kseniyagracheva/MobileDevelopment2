@@ -12,6 +12,9 @@ import androidx.navigation.Navigation;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentEditProfileBinding;
@@ -47,17 +50,70 @@ public class EditProfileFragment extends Fragment {
     }
 
     private void observeViewModel(){
+
+        vm.getLoading().observe(getViewLifecycleOwner(), isLoading->{
+            binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            binding.scrollView.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+
+            binding.saveUpdateButton.setEnabled(!isLoading);
+            binding.deleteProfileButton.setEnabled(!isLoading);
+        });
+
         vm.getUser().observe(getViewLifecycleOwner(), userUI ->{
-            if (userUI != null){
+            if (userUI != null && !vm.getLoading().getValue()){
                 binding.editNameText.setText(userUI.getName());
                 binding.editSurnameText.setText(userUI.getSurname());
                 binding.emailText.setText(userUI.getEmail());
             }
         });
 
-        vm.getLoading().observe(getViewLifecycleOwner(), isLoading->{
-            binding.
+
+
+        vm.getError().observe(getViewLifecycleOwner(), e ->{
+            if (e!=null){
+                Toast.makeText(requireContext(), e, Toast.LENGTH_SHORT).show();;
+                vm.clearError();
+            }
         });
+    }
+
+    private void setupClickListeners(){
+        binding.saveUpdateButton.setOnClickListener(v -> saveProfile());
+        binding.deleteProfileButton.setOnClickListener(v -> deleteProfile());
+        binding.backToProfileButton.setOnClickListener(v -> {
+            navController.popBackStack();
+            //navController.navigate(R.id.action_editProfileFragment_to_userInfoFragment);
+        });
+    }
+
+    private void saveProfile(){
+        String name =  binding.editNameText.getText().toString().trim();
+        String surname = binding.editSurnameText.getText().toString().trim();
+
+
+        if (name.isEmpty() || surname.isEmpty()){
+            Toast.makeText(requireContext(), "Заполните все поля", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        vm.editProfile(name, surname);
+        vm.loadCurrentUser();
+    }
+
+    private void deleteProfile (){
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle("Вы действительно хотите удалить аккаунт")
+                .setMessage("Все данные будут удалены навсегда!")
+                .setPositiveButton("Удалить", (dialog, which) -> vm.deleteProfile())
+                .setNegativeButton("Отмена", null)
+                .show();
+        navController.popBackStack();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        vm.loadCurrentUser();
     }
 
     @Override

@@ -51,6 +51,16 @@ public class FavoritesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         navController = Navigation.findNavController(view);
 
+        vm.getLoading().observe(getViewLifecycleOwner(), isLoading -> {
+            if (isLoading) {
+                binding.progressBar.setVisibility(View.VISIBLE);
+                binding.contentContainer.setVisibility(View.GONE);
+                binding.guestContainer.setVisibility(View.GONE);
+            } else {
+                binding.progressBar.setVisibility(View.GONE);
+            }
+        });
+
         vm.getUser().observe(getViewLifecycleOwner(), this::updateUIForUser);
         vm.loadUser();
     }
@@ -70,17 +80,17 @@ public class FavoritesFragment extends Fragment {
     }
 
     private void setupGuestProfile(){
-        binding.guestText.setText("Гость");
-        binding.headerText.setVisibility(View.GONE);
-        binding.loginButton.setVisibility(View.VISIBLE);
+        binding.guestContainer.setVisibility(View.VISIBLE);
+        binding.contentContainer.setVisibility(View.GONE);
         binding.loginButton.setOnClickListener(v -> {
             navController.navigate(R.id.action_favoritesFragment_to_authFragment);
         });
     }
 
     private void setupAuthorizedProfile(User user){
-        binding.guestText.setText("В вашем избранном пока пусто!");
-        binding.headerText.setVisibility(View.VISIBLE);
-        binding.loginButton.setVisibility(View.GONE);
+        binding.contentContainer.setVisibility(View.VISIBLE);
+        binding.emptyFavoritesText.setVisibility(View.VISIBLE);
+        binding.recyclerFavorites.setVisibility(View.GONE);
+        binding.emptyFavoritesText.setText("В вашем избранном пока пусто!");
     }
 }
