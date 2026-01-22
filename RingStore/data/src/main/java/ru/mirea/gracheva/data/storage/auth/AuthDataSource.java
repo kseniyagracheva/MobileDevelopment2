@@ -1,7 +1,6 @@
 package ru.mirea.gracheva.data.storage.auth;
 
 import ru.mirea.gracheva.data.DTO.UserDTO;
-import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
 
 public interface AuthDataSource {
     interface AuthCallback {
@@ -18,6 +17,8 @@ public interface AuthDataSource {
         public void onError(String errorMessage);
     }
 
+    public void editUserProfile(String uid, String name, String surname, AuthCallback callback);
+    public void deleteUserProfile(  AuthCallback callback);
     public void getCurrentUser(AuthCallback callback);
     public void register(String email, String password, RegisterCallback callback);
     public void login(String email, String password, AuthCallback callback);

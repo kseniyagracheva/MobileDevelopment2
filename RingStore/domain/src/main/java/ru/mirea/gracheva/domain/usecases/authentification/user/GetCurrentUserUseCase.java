@@ -10,7 +10,17 @@ public class GetCurrentUserUseCase {
         this.authRepository = authRepository;
     }
 
-    public User execute(){
-        return authRepository.getCurrentUser();
+    public void execute(AuthRepository.AuthCallback callback){
+        authRepository.getCurrentUser(new AuthRepository.AuthCallback() {
+            @Override
+            public void onSuccess(User user) {
+                callback.onSuccess(user);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                callback.onError(errorMessage);
+            }
+        });
     }
 }

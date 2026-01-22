@@ -13,11 +13,43 @@ public class AuthRepositoryImpl implements AuthRepository {
     }
 
     @Override
+    public void editUserProfile(String uid, String name, String surname, AuthCallback callback){
+        authDataSource.editUserProfile(uid, name, surname, new AuthDataSource.AuthCallback(){
+            @Override
+            public void onSuccess(UserDTO userDTO){
+                User user = mapToDomain(userDTO);
+                callback.onSuccess(user);
+            }
+
+            @Override
+            public void onError(String error){
+                callback.onError(error);
+            }
+        });
+    }
+
+    @Override
+    public void deleteUserProfile(AuthCallback callback){
+        authDataSource.deleteUserProfile(new AuthDataSource.AuthCallback() {
+            @Override
+            public void onSuccess(UserDTO userDTO) {
+                User user = mapToDomain(userDTO);
+                callback.onSuccess(null);
+            }
+
+            @Override
+            public void onError(String errorMessage) {
+                callback.onError(errorMessage);
+            }
+        });
+    }
+    @Override
     public void getCurrentUser(AuthCallback callback){
         authDataSource.getCurrentUser(new AuthDataSource.AuthCallback(){
             @Override
             public void onSuccess(UserDTO userDTO){
                 User user = mapToDomain(userDTO);
+                callback.onSuccess(user);
             }
 
             @Override

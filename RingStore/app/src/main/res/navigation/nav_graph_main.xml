@@ -13,6 +13,8 @@
             app:popUpToInclusive="true"/>
         <action android:id="@+id/action_userInfoFragment_to_authFragment"
             app:destination="@+id/authFragment"/>
+        <action android:id="@+id/action_userInfoFragment_to_editProfileFragment"
+            app:destination="@+id/editProfileFragment"/>
     </fragment>
     <!--Цены на металлы-->
     <fragment android:id="@+id/metalPriceFragment"
@@ -38,9 +40,16 @@
             app:popUpTo="@id/userInfoFragment"
             app:popUpToInclusive="true"/>
     </fragment>
+    <!--Регистрация-->
     <fragment android:id="@+id/registerFragment"
         android:name="ru.mirea.gracheva.ringstore.presentation.RegisterFragment">
         <action android:id="@+id/action_registerFragment_to_authFragment"
             app:destination="@id/authFragment" />
+    </fragment>
+    <!--Редактирование-->
+    <fragment android:id="@+id/editProfileFragment"
+        android:name="ru.mirea.gracheva.ringstore.presentation.EditProfileFragment">
+        <action android:id="@+id/action_editProfileFragment_to_userInfoFragment"
+            app:destination="@id/userInfoFragment" />
     </fragment>
 </navigation>

@@ -15,11 +15,9 @@ import androidx.navigation.Navigation;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
-import ru.mirea.gracheva.domain.models.User;
-import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
-import ru.mirea.gracheva.domain.usecases.authentification.auth.LogOutUseCase;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.FragmentUserInfoBinding;
+import ru.mirea.gracheva.ringstore.presentation.model.UserUI;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.userInfo.UserInfoViewModel;
 import ru.mirea.gracheva.ringstore.presentation.viewmodel.userInfo.UserInfoViewModelFactory;
 
@@ -39,8 +37,6 @@ public class UserInfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentUserInfoBinding.inflate(inflater, container, false);
         return binding.getRoot();
-
-
     }
 
     @Override
@@ -70,7 +66,7 @@ public class UserInfoFragment extends Fragment {
                 .show();
     }
 
-    private void updateUIForUser(User user){
+    private void updateUIForUser(UserUI user){
         if (user == null){ //Гость
             setupGuestProfile();
         } else{ //Авторизованный
@@ -82,6 +78,8 @@ public class UserInfoFragment extends Fragment {
     private void setupGuestProfile(){
         binding.emailText.setText("Гость");
         binding.logOutButton.setVisibility(View.GONE);
+        binding.nameText.setVisibility(View.GONE);
+        binding.surnameText.setVisibility(View.GONE);
         binding.editProfileButton.setVisibility(View.GONE);
         binding.loginButton.setVisibility(View.VISIBLE);
         binding.loginButton.setOnClickListener(v -> {
@@ -89,8 +87,10 @@ public class UserInfoFragment extends Fragment {
         });
     }
 
-    private void setupAuthorizedProfile(User user){
+    private void setupAuthorizedProfile(UserUI user){
         binding.emailText.setText(user.getEmail());
+        binding.nameText.setText(user.getName());
+        binding.surnameText.setText(user.getSurname());
         binding.logOutButton.setVisibility(View.VISIBLE);
         binding.logOutButton.setOnClickListener(v -> showLogoutConfirmationDialog());
         binding.editProfileButton.setVisibility(View.VISIBLE);

@@ -5,6 +5,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import ru.mirea.gracheva.data.DTO.UserDTO;
 import ru.mirea.gracheva.data.storage.auth.AuthDataSource;
@@ -17,6 +18,35 @@ public class FireBaseAuthDataSource implements AuthDataSource {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firestore = FirebaseFirestore.getInstance();
+    }
+
+    @Override
+    public void editUserProfile(String uid, String name, String surname, AuthDataSource.AuthCallback callback){
+        Map<String, Object> updates = new HashMap<>();
+        updates.put("name", name);
+        updates.put("surname", surname);
+
+        firestore.collection("users").document(uid)
+                .update(updates)
+                .addOnSuccessListener(aVoid -> callback.onSuccess(new UserDTO(uid, null, name, surname)))
+                .addOnFailureListener(e -> callback.onError(e.getMessage()));
+    }
+
+    @Override
+    public void deleteUserProfile(AuthDataSource.AuthCallback callback){
+        FirebaseUser fbUser = firebaseAuth.getCurrentUser();
+        if (fbUser == null) {
+            callback.onError("Нет активной сессии");
+            return;
+        }
+
+        //Удаление документа из FireStore
+        firestore.collection("users").document(fbUser.getUid())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    deleteFirebaseUser(fbUser, callback);
+                })
+                .addOnFailureListener(e -> callback.onError("Ошибка удаления" + e.getMessage()));
     }
 
     @Override
@@ -83,6 +113,18 @@ public class FireBaseAuthDataSource implements AuthDataSource {
                 }})// {{...}} создает анонимный класс, т.е. класс без имени, который существует только в контексте функции
                 .addOnSuccessListener(aVoid -> onComplete.run())
                 .addOnFailureListener(e -> onComplete.run());
+    }
+
+    private void deleteFirebaseUser(FirebaseUser fbUser, AuthDataSource.AuthCallback callback){
+        fbUser.delete()
+                .addOnCompleteListener(task ->{
+                    if(task.isSuccessful()){
+                        callback.onSuccess(new UserDTO(fbUser.getUid(), null, "", ""));
+                    }
+                    else{
+                        callback.onError("Ошибка удаления аккаунта: " + task.getException().getMessage());
+                    }
+                });
     }
 }
 

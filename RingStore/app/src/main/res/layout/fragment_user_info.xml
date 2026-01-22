@@ -8,6 +8,26 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <TextView
+        android:id="@+id/name_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Имя"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#44FFFFFF"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/surname_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp"
+        android:hint="Фамилия"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#44FDFDFD"
+        android:textSize="24sp" />
+
+    <TextView
         android:id="@+id/email_text"
         android:textColor="#FFFFFF"
         android:textSize="24sp"
