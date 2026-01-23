@@ -6,28 +6,30 @@
     android:orientation="vertical"
     android:padding="16dp">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Каталог"
+        android:textAlignment="center"
+        android:textSize="34sp" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:visibility="gone" />
+
 
     <LinearLayout
+        android:id="@+id/catalogList"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#000000"
         android:orientation="horizontal"
         android:padding="16dp">
 
-        <Button
-            android:id="@+id/sortingButton"
-            android:layout_width="51dp"
-            android:layout_height="match_parent"
-            android:backgroundTint="#444444"
-            android:textColor="#FFFFFF"
-            app:icon="@raw/filter" />
-
-        <TextView
-            android:layout_width="312dp"
-            android:layout_height="wrap_content"
-            android:text="Каталог"
-            android:textAlignment="center"
-            android:textSize="34sp" />
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView

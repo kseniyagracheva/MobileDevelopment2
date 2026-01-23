@@ -1,4 +1,4 @@
-package ru.mirea.gracheva.data.storage.network;
+package ru.mirea.gracheva.data.storage.network.metal;
 
 import com.google.gson.annotations.SerializedName;
 

@@ -1,4 +1,4 @@
-package ru.mirea.gracheva.ringstore.presentation.viewmodel.rings;
+package ru.mirea.gracheva.ringstore.presentation.viewmodel.ringDetail;
 
 import android.content.Context;
 
@@ -7,14 +7,12 @@ import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
 
 import ru.mirea.gracheva.data.repository.RingRepositoryImpl;
-
 import ru.mirea.gracheva.data.storage.rings.RingDataSource;
 import ru.mirea.gracheva.data.storage.rings.firestore.FirestoreDataSource;
 import ru.mirea.gracheva.domain.repository.RingRepository;
-
-public class RingListViewModelFactory implements ViewModelProvider.Factory {
+public class RingDetailViewModelFactory implements ViewModelProvider.Factory{
     private Context context;
-    public RingListViewModelFactory(Context context){
+    public RingDetailViewModelFactory(Context context){
         this.context = context;
     }
     @NonNull
@@ -23,6 +21,6 @@ public class RingListViewModelFactory implements ViewModelProvider.Factory {
 
         RingDataSource ringDataSource = new FirestoreDataSource();
         RingRepository ringRepository = new RingRepositoryImpl(context, ringDataSource);
-        return (T) new RingListViewModel(ringRepository);
+        return (T) new RingDetailViewModel(ringRepository);
     }
 }

@@ -7,6 +7,7 @@ import android.view.MenuItem;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
@@ -21,6 +22,7 @@ import ru.mirea.gracheva.domain.repository.auth.AuthRepository;
 import ru.mirea.gracheva.domain.usecases.authentification.user.GetCurrentUserUseCase;
 import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.ActivityMainBinding;
+import ru.mirea.gracheva.ringstore.presentation.viewmodel.auth.AuthViewModel;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -30,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
     private AuthRepository authRepository;
     private GetCurrentUserUseCase getCurrentUserUseCase;
+
 
     public MainActivity(){
         AuthDataSource dataSource = new FireBaseAuthDataSource();
@@ -54,8 +57,6 @@ public class MainActivity extends AppCompatActivity {
         setupBottomNavVis();
 
     }
-
-
     private void guestCheck() {
         binding.navView.setOnItemSelectedListener(this::onNavItemSelected);
     }
@@ -67,7 +68,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupBottomNavVis() {
         navController.addOnDestinationChangedListener((controller, destination, arguments) ->{
-            if (destination.getId() == R.id.authFragment || destination.getId() == R.id.registerFragment){
+            if (destination.getId() == R.id.authFragment ||
+                    destination.getId() == R.id.registerFragment ||
+                    destination.getId() == R.id.ringDetailFragment){
                 binding.navView.setVisibility(View.GONE);
             }
             else{

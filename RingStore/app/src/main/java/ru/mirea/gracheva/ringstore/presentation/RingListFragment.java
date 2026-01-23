@@ -42,17 +42,24 @@ public class RingListFragment extends Fragment {
         binding.ringsRecyclerView.setLayoutManager(new GridLayoutManager(requireContext(), 2));
         vm.getRingsLiveData().observe(getViewLifecycleOwner(), rings->{
             requireActivity().runOnUiThread(()->{
-                RingsAdapter adapter = new RingsAdapter(rings);
+                RingsAdapter adapter = new RingsAdapter(rings, ringId -> {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("ringId", ringId);
+                    navController.navigate(R.id.action_ringListFragment_to_ringDetailFragment, bundle);
+                });
                 binding.ringsRecyclerView.setAdapter(adapter);
             });
+        });
+
+        vm.getIsLoadingLiveData().observe(getViewLifecycleOwner(), isLoading ->{
+            binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
+            binding.catalogList.setVisibility(isLoading ? View.GONE : View.VISIBLE);
         });
         vm.getErrorLiveData().observe(getViewLifecycleOwner(), error ->{
             Toast.makeText(requireContext(),  error, Toast.LENGTH_SHORT).show();
         });
 
         vm.getRings();
-
-
     }
 
     @Override

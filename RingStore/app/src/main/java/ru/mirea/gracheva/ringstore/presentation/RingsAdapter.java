@@ -6,20 +6,26 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.List;
 
 import ru.mirea.gracheva.domain.models.Ring;
+import ru.mirea.gracheva.ringstore.R;
 import ru.mirea.gracheva.ringstore.databinding.ItemCardRingBinding;
 
 public class RingsAdapter extends RecyclerView.Adapter<RingsAdapter.RingViewHolder>{
     private List<Ring> rings;
 
-    public RingsAdapter(List<Ring> rings) {
-        this.rings = rings;
+    public interface OnRingClickListener{
+        public void onRingClick(String ringId);
     }
-    public void updateData(List<Ring> newRings) {
-        this.rings = newRings;
-        notifyDataSetChanged();
+
+    private final OnRingClickListener listener;
+
+    public RingsAdapter(List<Ring> rings, OnRingClickListener listener) {
+        this.rings = rings;
+        this.listener = listener;
     }
 
     public static class RingViewHolder extends RecyclerView.ViewHolder {
@@ -30,8 +36,15 @@ public class RingsAdapter extends RecyclerView.Adapter<RingsAdapter.RingViewHold
             this.binding = binding;
         }
         public void bind(Ring ring) {
-            binding.metalTextView.setText(ring.getMetal());
+            binding.nameTextView.setText(ring.getName());
             binding.priceTextView.setText(ring.getPrice() + " руб.");
+
+            Picasso.get()
+                    .load(ring.getImageUrl())
+                    .placeholder(R.drawable.ic_launcher_background)
+                    .error(R.drawable.ic_launcher_foreground)
+                    .fit()
+                    .into(binding.ringImageView);
         }
     }
     @NonNull
@@ -43,7 +56,13 @@ public class RingsAdapter extends RecyclerView.Adapter<RingsAdapter.RingViewHold
     }
     @Override
     public void onBindViewHolder(@NonNull RingViewHolder holder, int position) {
-        holder.bind(rings.get(position));
+        Ring ring = rings.get(position);
+        holder.bind(ring);
+
+
+        holder.itemView.setOnClickListener(v->{
+            listener.onRingClick(ring.getRingId());
+        });
     }
     @Override
     public int getItemCount() {

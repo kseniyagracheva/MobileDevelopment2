@@ -15,6 +15,12 @@ public interface RingDao {
     @Query("SELECT * FROM rings")
     List<RingEntity> getAllRings();
 
+    @Query("SELECT * FROM rings WHERE ringId = :ringId LIMIT 1")
+    RingEntity getRingById(String ringId);
+
+    //@Query("SELECT * FROM rings WHERE ringId IN (:ringIds)")
+    //List<RingEntity> getRingsByIds(List<String> ringIds);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void insertRings(List<RingEntity> rings);
 

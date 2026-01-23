@@ -23,6 +23,14 @@
     <!--Каталог колец-->
     <fragment android:id="@+id/ringListFragment"
         android:name="ru.mirea.gracheva.ringstore.presentation.RingListFragment">
+        <action android:id="@+id/action_ringListFragment_to_ringDetailFragment"
+            app:destination="@+id/ringDetailFragment"/>
+    </fragment>
+    <!--Страница с деталями о кольце-->
+    <fragment android:id="@+id/ringDetailFragment"
+        android:name="ru.mirea.gracheva.ringstore.presentation.RingDetailFragment">
+        <action android:id="@+id/action_ringDetailFragment_to_userInfoFragment"
+            app:destination="@+id/userInfoFragment"/>
     </fragment>
     <!--Избранное-->
     <fragment android:id="@+id/favoritesFragment"

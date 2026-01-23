@@ -5,7 +5,7 @@ import androidx.room.RoomDatabase;
 import ru.mirea.gracheva.data.DTO.RingEntity;
 import ru.mirea.gracheva.data.storage.room.dao.RingDao;
 
-@Database(entities = {RingEntity.class}, version = 1, exportSchema = false)
+@Database(entities = {RingEntity.class}, version = 2, exportSchema = false)
 public abstract class AppDatabase extends RoomDatabase {
     public abstract RingDao ringDao();
 }

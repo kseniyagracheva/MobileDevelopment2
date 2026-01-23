@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000"
+    android:orientation="vertical"
+    android:padding="16dp">
+
+    <!-- Лоадер -->
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyleLarge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_weight="1"
+        android:visibility="gone" />
+
+    <!-- Контейнер деталей - ВЕРТИКАЛЬНО! -->
+    <LinearLayout
+        android:id="@+id/ringDetailContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+
+        <!-- Изображение -->
+        <ImageView
+            android:id="@+id/ringImageView"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:scaleType="centerCrop"
+            android:contentDescription="Изображение кольца"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Название -->
+        <TextView
+            android:id="@+id/ringNameTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Золотое кольцо"
+            android:textColor="#FFFFFF"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="12dp" />
+
+        <!-- Металл -->
+        <TextView
+            android:id="@+id/metalTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Металл: Золото 585 пр."
+            android:textColor="#CCCCCC"
+            android:textSize="20sp"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Цена -->
+        <TextView
+            android:id="@+id/priceTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="50 000 ₽"
+            android:textColor="#FFFFFF"
+            android:textSize="32sp"
+            android:layout_gravity="center" />
+
+
+        <Button
+            android:id="@+id/favoriteButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="#444444"
+            android:text="Добавить в избранное"
+            android:textColor="#FFFFFF"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+
+
+    <!-- Кнопка в самом низу -->
+    <Button
+    android:id="@+id/backToCatalogButton"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="16dp"
+    android:backgroundTint="#444444"
+    android:text="Назад в каталог"
+    android:textColor="#FFFFFF"
+    android:textSize="16sp" />
+
+</LinearLayout>

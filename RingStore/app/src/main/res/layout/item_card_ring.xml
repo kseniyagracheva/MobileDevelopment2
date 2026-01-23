@@ -24,20 +24,20 @@
 
 
         <TextView
-            android:id="@+id/priceTextView"
+            android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Цена"
+            android:text="Название:"
             android:textColor="#FFFFFF"
             android:textSize="14sp"
             android:paddingStart="16dp"
             android:layout_marginTop="16dp"/>
 
         <TextView
-            android:id="@+id/metalTextView"
+            android:id="@+id/priceTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Металл"
+            android:text="Цена:"
             android:textColor="#FFFFFF"
             android:textSize="16sp"
             android:paddingStart="16dp"

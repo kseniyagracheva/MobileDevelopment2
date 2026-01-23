@@ -1,4 +1,4 @@
-package ru.mirea.gracheva.data.storage.network;
+package ru.mirea.gracheva.data.storage.network.metal;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
